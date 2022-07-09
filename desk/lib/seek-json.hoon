@@ -34,6 +34,23 @@
 ++  dejs
   =,  dejs:format
   |%
-
+  ++  declarations  (ar declare)
+  ++  declare
+    ^-  $-(json declare:s)
+    %-  ot
+    :~  reach/(su (perk [%friends %public %private ~]))
+        post/post
+    ==
+  ++  post
+    ^-  $-(json post:s)
+    %-  ot
+    :~  title/so
+        type/type
+        link/so
+        description/so
+        tags/(ar so)
+        image/so
+    ==
+  ++  type  (su (perk [%app %group %content %other ~]))
   --
 --

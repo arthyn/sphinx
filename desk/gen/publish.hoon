@@ -2,8 +2,8 @@
 /+  *seek
 :-  %say
 |=  $:  [now=@da eny=@uv =beak]
-        [[=post:s source=@p ~] ~]
+        [[=post:s ~] ~]
     ==
-:-  %directory-listing
-^-  listing:s
-[post (digest post) %friends source now]  
+:-  %declare
+^-  declare:s
+[%friends post]  

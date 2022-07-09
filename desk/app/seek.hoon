@@ -98,22 +98,31 @@
   |=  [=mark =vase]
   |^  ^+  cor 
   ?+    mark  ~|(bad-poke/mark !!)
-      %directory-listing
-    =+  !<(=listing:s vase)
-    (publish listing)
+      %declare
+    =+  !<(=declare:s vase)
+    di-abet:(publish declare di-core)
+      %declarations
+    =+  !<(declared=(list declare:s) vase)
+    =.  di-core  (roll declared publish)
+    cor
   ==
   ++  publish
-    |=  =listing:s
-    ^+  cor
+    |=  [=declare:s core=_di-core]
+    ^+  di-core
     ::  
-    ?>  =(src.bowl source.listing)
     ?>  from-self
-    ?>  =(hash.listing (digest post.listing))
+    =/  listing
+      :*  post=q.declare
+          hash=(digest q.declare)
+          reach=p.declare
+          source=our.bowl
+          time=now.bowl
+      ==
     ?:  (~(has by directory) hash.listing)
       ~&  'Listing already exists.'
       cor
     =.  published  (~(put by directory) hash.listing listing)
-    di-abet:(di-publish:(di-abed:di-core hash.listing) listing)
+    (di-publish:(di-abed:core hash.listing) listing)
   --
 :: 
 ++  watch
@@ -165,16 +174,7 @@
     =/  limit  (slav %ud i.t.t.t.t.path)
     ::  expects encoded @t values)
     =/  term   `@t`(slav %t i.t.t.path)
-    =/  term-counts  (get-term-counts term)
-    ~&  term-counts
-    =/  terms   (get-terms term-counts)
-    ~&  terms
-    =/  all=(list listing:s)
-      %-  zing
-      %+  turn
-        terms
-      |=  [=key:s v=@ud]
-      (get-listings (get-hashes key))
+    =/  all  (get-listings (get-hashes term))
     =/  listings  (swag [start limit] all)
     :*  listings
         start 
@@ -183,69 +183,15 @@
         (lent all)
     ==
   ==
-::
-++  get-terms
-  |=  tally=(map @t @ud)
-  ^-  (list [@t @ud])
-  =/  sorted
-    %+  sort
-      ~(tap by tally)
-    |=  [[k=@t v=@ud] [l=@t w=@ud]]
-    (lth v w)
-  =/  median-index  (div (lent sorted) 2)
-  =/  q1  (median (scag +(median-index) sorted))
-  =/  q3  (median (slag median-index sorted))
-  =/  iqr  (sub q3 q1)      
-  %+  skim
-    sorted
-  |=  [k=@t v=@ud]
-  (gth:rs (sun:rs v) (mul:rs (sun:rs q3) .1.5))
-++  median
-  |=  terms=(list [k=@t v=@ud])
-  ^-  @ud
-  =/  length  (lent terms)
-  =/  middle  (div length 2)
-  ?.  =((mod length 2) 0)  (tail (snag middle terms))
-  %+  div 
-    %+  add 
-      (tail (snag middle terms))
-    (tail (snag +(middle) terms))
-  2
-++  get-term-counts
-  |=  term=@t
-  ^-  (map @t @ud)
-  =/  parts  (split:sift term)
-  =/  ngrams=(list @t)
-    %-  zing
-    %+  turn
-      parts
-    |=  part=@t
-    (iching part)
-  %+  roll
-    ngrams
-  |=  [ngram=@t tally=(map @t @ud)]
-  ^-  (map @t @ud)
-  =/  words=(set @t)  (~(gut by trigrams) ngram *(set @t))
-  %-  
-    %-  ~(uno by tally)
-      %-  malt
-      %+  turn
-        ~(tap in words)
-      |=  word=@t
-      [word 1]
-  |=  [k=@t v=@ud w=@ud]
-  (add v w) 
 ++  get-hashes
   |=  =key:s
-  ^-  (list hash:s)
   %+  turn  
     %+  sort  (~(gut by lookup) key *(list entry:s))
     |=  [a=entry:s b=entry:s]
     (gte rank.a rank.b)
   |=(=entry:s hash.entry)
 ++  get-listings
-  |=  l=(list hash:s)
-  ^-  (list listing:s)
+  |=  l=(list hash)
   %+  turn  l
   |=(=hash:s (~(got by directory) hash))
 ++  from-self  =(our src):bowl
@@ -264,22 +210,18 @@
     =/  entries=lookup:s
       %-  malt
       %-  zing
-      :~  %+  turn
-            (sift:sift title.post.l) 
-          |=  word=@t
-          [word ~[[hash rank=0]]]
-          ~[[type.post.l ~[[hash rank=1]]]]
+      :~  ~[[title.post.l ~[[hash rank=0]]]]
           %+  turn
             tags.post.l
           |=  tag=@t
-          [tag ~[[hash rank=2]]]
+          [tag ~[[hash rank=1]]]
           %+  turn
             (sift:sift description.post.l)
           |=  word=@t
-          [word ~[[hash rank=3]]]          
+          [word ~[[hash rank=2]]]
+          ~[[type.post.l ~[[hash rank=3]]]]
       ==
     =/  keys  ~(tap in ~(key by entries))
-    ~&  keys
     =.  trail  (~(put by trail) hash keys)
     =.  lookup      
       %-  ~(uni by entries)

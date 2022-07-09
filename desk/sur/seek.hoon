@@ -28,13 +28,15 @@
       image=@t
   ==
 ::
++$  reach  ?(%private %friends %public)
+::
++$  declare  (pair reach post)
+::
 :: a listing includes the content of the post as well as information
 :: that would affect the hash so are left out, namely time, source and 
 :: hash. each post has a source and time so that they can be updated
 :: via the source requesting to replace the listing and hash.
 ::
-::
-+$  reach  ?(%private %friends %public)
 ::
 +$  listing
   $:  =post
