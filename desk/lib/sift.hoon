@@ -11,7 +11,7 @@
   ^-  (list @t)
   =/  lines  (crip (trimall corpus))
   %+  rash  lines
-  (more ace (cook crip (plus alf)))
+  (more ace (cook crip (plus ;~(pose aln hep))))
 ++  trimall
   |=  value=@t
   |^  ^-  tape

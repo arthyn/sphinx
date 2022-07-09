@@ -1,14 +1,13 @@
 /-  s=seek
 /+  j=seek-json
-|_  =notice:s
+|_  =directory:s
 ++  grad  %noun
 ++  grow
   |%
-  ++  noun  notice
+  ++  noun  directory
   --
 ++  grab
   |%
-  ++  noun  notice:s
-  ++  json  notice:dejs:j
+  ++  noun  directory:s
   --
 --
