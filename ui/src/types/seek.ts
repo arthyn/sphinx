@@ -1,6 +1,15 @@
+export type PostType = 'app' | 'group' | 'content' | 'other';
+
+export type PostFilter = 'all' | PostType;
+
+export interface Declare {
+  reach: 'friends' | 'public' | 'private';
+  post: Post
+}
+
 export interface Post {
   title: string;
-  type: 'app' | 'group' | 'content' | 'other';
+  type: PostType;
   description: string;
   image: string;
   tags: string[];

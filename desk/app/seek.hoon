@@ -2,6 +2,7 @@
 /+  gossip, default-agent, verb, dbug
 /+  *seek
 /+  sift
+/+  m=metaphone
 /$  grab-listing  %noun  %directory-listing
 /$  grab-directory  %noun  %directory
 ^-  agent:gall
@@ -11,7 +12,7 @@
   +$  state-0
     $:  %0
         =lookup:s
-        =trigrams:s
+        =phonetics:s
         =trail:s
         =directory:s
         published=directory:s
@@ -101,10 +102,10 @@
       %declare
     =+  !<(=declare:s vase)
     di-abet:(publish declare di-core)
-      %declarations
-    =+  !<(declared=(list declare:s) vase)
-    =.  di-core  (roll declared publish)
-    cor
+    ::    %declarations
+    :: =+  !<(declared=(list declare:s) vase)
+    :: =.  di-core  (roll declared publish)
+    :: cor
   ==
   ++  publish
     |=  [=declare:s core=_di-core]
@@ -120,7 +121,7 @@
       ==
     ?:  (~(has by directory) hash.listing)
       ~&  'Listing already exists.'
-      cor
+      di-core
     =.  published  (~(put by directory) hash.listing listing)
     (di-publish:(di-abed:core hash.listing) listing)
   --
@@ -167,14 +168,24 @@
   |=  =path
   ^-  (unit (unit cage))
   ?+  path  [~ ~]
-      [%x %lookup @ @ @ ~]  
+      [%x %lookup @ @ @ @ ~]  
     =-  ``search+!>(-)
     ^-  search:s
-    =/  start  (slav %ud i.t.t.t.path)
-    =/  limit  (slav %ud i.t.t.t.t.path)
+    =/  filter  
+      %+  rash  i.t.t.path 
+      (perk [%app %group %content %other %all ~])
+    =/  term   `@t`(slav %t i.t.t.t.path)
+    =/  start  (slav %ud i.t.t.t.t.path)
+    =/  limit  (slav %ud i.t.t.t.t.t.path)
     ::  expects encoded @t values)
-    =/  term   `@t`(slav %t i.t.t.path)
-    =/  all  (get-listings (get-hashes term))
+    =/  all
+      %+  skim
+        %-  get-listings
+        %-  get-hashes
+        %-  sort-entries
+        (get-entries term)
+      |=  =listing:s
+      |(=(filter %all) =(filter type.post.listing))
     =/  listings  (swag [start limit] all)
     :*  listings
         start 
@@ -183,12 +194,61 @@
         (lent all)
     ==
   ==
-++  get-hashes
+++  get-entries
   |=  =key:s
+  ^-  (list entry:s)
+  =/  title   (norm:sift key)  :: full query
+  =/  parts   (sift:sift key)  :: split query
+  =/  title-entries
+    %-  malt
+    %+  weld
+      (get-phonetics title)
+    (~(gut by lookup) title *(list entry:s))
+  %~  tap  by
+  %-  
+    %~  uni  by   :: union and prefer title entries (better rank)
+    %-  malt
+    %-  zing
+    %+  turn
+      parts
+    |=  word=@t
+    %+  turn
+      %+  weld
+        (get-phonetics word)
+      (~(gut by lookup) word *(list entry:s))
+    |=  =entry:s
+    (derank entry 10)
+  title-entries
+++  get-phonetics
+  |=  =key:s
+  ^-  (list entry:s)
+  =/  keys
+    %+  skim
+      %~  tap  in
+      (~(gut by phonetics) (utter:m key) *(set key:s))
+    |=  [word=key:s]
+    !=(key word)
+  %+  roll
+    keys    
+  |=  [word=key:s entries=(list entry:s)]
+  %+  weld 
+    entries 
+  %+  turn
+    (~(gut by lookup) word *(list entry:s))
+  |=  =entry:s
+  (derank entry 10)
+++  derank
+  |=  [=entry:s offset=@ud]
+  [hash.entry (add rank.entry offset)]  :: phonetically similar should be lower
+++  sort-entries
+  |=  entries=(list entry:s)
+  %+  sort  entries
+  |=  [a=entry:s b=entry:s]
+  (lth rank.a rank.b)
+++  get-hashes
+  |=  entries=(list entry:s)
   %+  turn  
-    %+  sort  (~(gut by lookup) key *(list entry:s))
-    |=  [a=entry:s b=entry:s]
-    (gte rank.a rank.b)
+    entries
   |=(=entry:s hash.entry)
 ++  get-listings
   |=  l=(list hash)
@@ -210,16 +270,20 @@
     =/  entries=lookup:s
       %-  malt
       %-  zing
-      :~  ~[[title.post.l ~[[hash rank=0]]]]
+      :~  ~[[(crip (cass (trip title.post.l))) ~[[hash rank=0]]]]
+          %+  turn
+            (sift:sift title.post.l)
+          |=  word=@t
+          [word ~[[hash rank=1]]]
           %+  turn
             tags.post.l
           |=  tag=@t
-          [tag ~[[hash rank=1]]]
+          [(norm:sift tag) ~[[hash rank=2]]]
           %+  turn
             (sift:sift description.post.l)
           |=  word=@t
-          [word ~[[hash rank=2]]]
-          ~[[type.post.l ~[[hash rank=3]]]]
+          [word ~[[hash rank=3]]]
+          ~[[type.post.l ~[[hash rank=4]]]]
       ==
     =/  keys  ~(tap in ~(key by entries))
     =.  trail  (~(put by trail) hash keys)
@@ -229,18 +293,13 @@
       |=  [=key:s value=(list entry:s)]
       ?.  (~(has by entries) key)  value
       (weld value (~(got by entries) key))
-    =.  trigrams
-      %+  roll
-        %+  snoc
-          %+  turn  keys
-          |=  =key:s
-          %-  malt
-          %+  turn  (iching key)
-          |=  =trigram:s
-          [trigram (silt ~[key])]
-        trigrams
-      |=  [next=trigrams:s t=trigrams:s]
-      %-  (~(uno by t) next)
+    =.  phonetics
+      %-  
+      %-  ~(uno by phonetics)
+        %-  malt
+        %+  turn  keys
+        |=  =key:s
+        [(utter:m key) (silt ~[key])]
       |=  [k=key:s v=(set key:s) w=(set key:s)]
       (~(uni in v) w)
     di-core

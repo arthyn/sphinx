@@ -12,9 +12,8 @@
 ++  split
   |=  corpus=@t
   ^-  (list @t)
-  ~&  (norm corpus)
   %+  rash  (norm corpus)
-  (more ace (cook crip (plus allowed)))
+  (more ace (cook crip (plus ;~(pose aln hep))))
 ++  allowed  ;~(pose aln hep ace)
 ++  banned  ;~(less allowed prn)
 ++  expunge
@@ -22,9 +21,10 @@
   ^-  (list @t)
   %-  zing
   %+  rash  corpus
-  %-  star 
+  %-  plus 
   ;~  pose
-    ;~(sfix allowed (plus banned))
+    ;~(pfix (plus banned) (star allowed))
+    ;~(sfix (star allowed) (plus banned))
     (plus allowed)
   ==
 ++  trimall
