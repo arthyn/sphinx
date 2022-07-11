@@ -1,14 +1,14 @@
 /-  s=seek
 /+  j=seek-json
-|_  =notice:s
+|_  =declare:s
 ++  grad  %noun
 ++  grow
   |%
-  ++  noun  notice
+  ++  noun  declare
   --
 ++  grab
   |%
-  ++  noun  notice:s
-  ++  json  notice:dejs:j
+  ++  noun  declare:s
+  ++  json  declare:dejs:j
   --
 --

@@ -1,7 +1,8 @@
 |%
 +$  key   @t    :: keyword that points to listings
-+$  hash  @uw  :: @uw version of shax result 
++$  hash  @uv  :: @uv version of shax result 
 +$  rank  @ud  :: @ud representing priority of listing
++$  phonetic  @t  :: @t consisting of phonetic characters from metaphone
 ::
 :: an entry points to a listing hash and provides
 :: a semblance of priority for the listing
@@ -11,22 +12,38 @@
       =rank   :: based on which attribute keyword came from
   ==
 ::
-:: a listing represents a search result which points to some
+:: a post represents a search result which points to some
 :: external resource through a link. this is a rich result
 :: which gives a summary of the resource as well as an image
 :: and related topics.
 ::
-:: each listing has a source and time so that they can be updated
-:: via the source requesting to replace the listing and hash 
++$  post-type  ?(%app %group %content %other)
 ::
-+$  listing
++$  post
   $:  title=@t
+      type=post-type
       link=@t
       description=@t
       tags=(list @t)
       image=@t
-      source=@p
-      time=@da
+  ==
+::
++$  reach  ?(%private %friends %public)
+::
++$  declare  (pair reach post)
+::
+:: a listing includes the content of the post as well as information
+:: that would affect the hash so are left out, namely time, source and 
+:: hash. each post has a source and time so that they can be updated
+:: via the source requesting to replace the listing and hash.
+::
+::
++$  listing
+  $:  =post
+      =hash
+      =reach
+      source=@p 
+      time=@da 
   ==
 ::
 :: lookup acts as a search index for keywords, each key points to
@@ -34,6 +51,11 @@
 :: the lookup because they are repeated under different keys
 :: 
 +$  lookup  (map key (list entry))
+::
+::  phonetics act as a way to account for spelling errors. we keep a map
+::  of phonetic to set of lookup keys. we take the query's phonetics and
+::  use that to add other words to the results.
++$  phonetics  (map phonetic (set key))
 ::
 :: trail is a way for us to know all the keys required to update 
 :: a listing with the new hash of it's contents
@@ -45,5 +67,12 @@
 ::
 +$  directory  (map hash listing)
 ::
-+$  notice  (pair hash listing)
++$  search
+  $:  listings=(list listing)
+      start=@ud
+      limit=@ud
+      size=@ud
+      total=@ud
+  ==
+::
 --

@@ -1,7 +1,10 @@
 /-  s=seek
-/+  default-agent, verb, dbug
+/+  gossip, default-agent, verb, dbug
 /+  *seek
 /+  sift
+/+  m=metaphone
+/$  grab-listing  %noun  %directory-listing
+/$  grab-directory  %noun  %directory
 ^-  agent:gall
 =>
   |%
@@ -9,6 +12,7 @@
   +$  state-0
     $:  %0
         =lookup:s
+        =phonetics:s
         =trail:s
         =directory:s
         published=directory:s
@@ -18,6 +22,13 @@
 =*  state  -
 =<
   %+  verb  &
+  %-  %+  agent:gossip
+      [2 %mutuals %mutuals]
+    %-  malt
+    ^-  (list [mark $-(* vase)])
+    :~  [%directory-listing |=(n=* !>((grab-listing n)))]
+        [%directory |=(n=* !>((grab-directory n)))]
+    ==
   %-  agent:dbug
   |_  =bowl:gall
   +*  this  .
@@ -88,26 +99,66 @@
   |=  [=mark =vase]
   |^  ^+  cor 
   ?+    mark  ~|(bad-poke/mark !!)
-      %directory-notice
-    =+  !<(=notice:s vase)
-    (publish notice)
+      %declare
+    =+  !<(=declare:s vase)
+    di-abet:(publish declare di-core)
+    ::    %declarations
+    :: =+  !<(declared=(list declare:s) vase)
+    :: =.  di-core  (roll declared publish)
+    :: cor
   ==
   ++  publish
-    |=  =notice:s
-    ^+  cor
-    ?>  =(src.bowl source.q.notice)
-    ?>  =(p.notice (digest q.notice))
-    di-abet:(di-init:(di-abed:di-core p.notice) q.notice)
+    |=  [=declare:s core=_di-core]
+    ^+  di-core
+    ::  
+    ?>  from-self
+    =/  listing
+      :*  post=q.declare
+          hash=(digest q.declare)
+          reach=p.declare
+          source=our.bowl
+          time=now.bowl
+      ==
+    ?:  (~(has by directory) hash.listing)
+      ~&  'Listing already exists.'
+      di-core
+    =.  published  (~(put by directory) hash.listing listing)
+    (di-publish:(di-abed:core hash.listing) listing)
   --
-::
+:: 
 ++  watch
   |=  =path
   ^+  cor
-  cor
+  ?+    path  ~|(bad-watch-path/path !!)
+      [%~.~ %gossip %source ~]
+    (give %fact ~ directory+!>(published))
+  ==
 ++  agent
   |=  [=wire =sign:agent:gall]
   ^+  cor
-  cor
+  ?+    wire  ~|(bad-agent-wire/wire !!)
+      [%~.~ %gossip %gossip ~]
+    ?+  -.sign  ~|([%unexpected-gossip-sign -.sign] !!)
+        %fact
+      =*  mark  p.cage.sign
+      =*  vase  q.cage.sign
+      ?+  mark
+            ~&  [dap.bowl %unexpected-mark-fact mark wire=wire]
+            cor
+          %directory-listing
+        =+  !<(=listing:s vase)
+        ?>  =(hash.listing (digest post.listing))
+        ?:  (~(has by directory) hash.listing)
+        ~&  'Listing already exists.'
+        cor
+        di-abet:(di-publish:(di-abed:di-core hash.listing) listing)
+      ::
+          %directory
+        =+  !<(d=directory:s vase)
+        cor(directory (~(uni by directory) d))
+      ==
+    ==
+  ==
 ++  arvo
   |=  [=wire sign=sign-arvo]
   ^+  cor
@@ -117,20 +168,92 @@
   |=  =path
   ^-  (unit (unit cage))
   ?+  path  [~ ~]
-      [%x %lookup @ ~]  
-    =-  ``listings+!>(-)
-    ^-  (list listing:s)
-    %+  turn
-      %+  turn  
-        %+  sort  (~(gut by lookup) i.t.t.path *(list entry:s))
-        |=  [a=entry:s b=entry:s]
-        (gte rank.a rank.b)
-      |=(=entry:s hash.entry)
-    |=  =hash:s
-    (~(got by directory) hash)
-  ::
+      [%x %lookup @ @ @ @ ~]  
+    =-  ``search+!>(-)
+    ^-  search:s
+    =/  filter  
+      %+  rash  i.t.t.path 
+      (perk [%app %group %content %other %all ~])
+    =/  term   `@t`(slav %t i.t.t.t.path)
+    =/  start  (slav %ud i.t.t.t.t.path)
+    =/  limit  (slav %ud i.t.t.t.t.t.path)
+    ::  expects encoded @t values)
+    =/  all
+      %+  skim
+        %-  get-listings
+        %-  get-hashes
+        %-  sort-entries
+        (get-entries term)
+      |=  =listing:s
+      |(=(filter %all) =(filter type.post.listing))
+    =/  listings  (swag [start limit] all)
+    :*  listings
+        start 
+        limit 
+        (lent listings)
+        (lent all)
+    ==
   ==
-::
+++  get-entries
+  |=  =key:s
+  ^-  (list entry:s)
+  =/  title   (norm:sift key)  :: full query
+  =/  parts   (sift:sift key)  :: split query
+  =/  title-entries
+    %-  malt
+    %+  weld
+      (get-phonetics title)
+    (~(gut by lookup) title *(list entry:s))
+  %~  tap  by
+  %-  
+    %~  uni  by   :: union and prefer title entries (better rank)
+    %-  malt
+    %-  zing
+    %+  turn
+      parts
+    |=  word=@t
+    %+  turn
+      %+  weld
+        (get-phonetics word)
+      (~(gut by lookup) word *(list entry:s))
+    |=  =entry:s
+    (derank entry 10)
+  title-entries
+++  get-phonetics
+  |=  =key:s
+  ^-  (list entry:s)
+  =/  keys
+    %+  skim
+      %~  tap  in
+      (~(gut by phonetics) (utter:m key) *(set key:s))
+    |=  [word=key:s]
+    !=(key word)
+  %+  roll
+    keys    
+  |=  [word=key:s entries=(list entry:s)]
+  %+  weld 
+    entries 
+  %+  turn
+    (~(gut by lookup) word *(list entry:s))
+  |=  =entry:s
+  (derank entry 10)
+++  derank
+  |=  [=entry:s offset=@ud]
+  [hash.entry (add rank.entry offset)]  :: phonetically similar should be lower
+++  sort-entries
+  |=  entries=(list entry:s)
+  %+  sort  entries
+  |=  [a=entry:s b=entry:s]
+  (lth rank.a rank.b)
+++  get-hashes
+  |=  entries=(list entry:s)
+  %+  turn  
+    entries
+  |=(=entry:s hash.entry)
+++  get-listings
+  |=  l=(list hash)
+  %+  turn  l
+  |=(=hash:s (~(got by directory) hash))
 ++  from-self  =(our src):bowl
 ++  di-core
   |_  [=listing:s =hash:s]
@@ -140,30 +263,45 @@
   ++  di-abed
     |=  h=hash:s
     di-core(hash h, listing (~(gut by directory) h *listing:s))
-  ++  di-init
+  ++  di-publish
     |=  l=listing:s
     =.  listing  l
+    =.  cor  (emit (invent:gossip %directory-listing !>(listing)))
     =/  entries=lookup:s
       %-  malt
       %-  zing
-      :~  ~[[title.l ~[[hash rank=0]]]]
+      :~  ~[[(crip (cass (trip title.post.l))) ~[[hash rank=0]]]]
           %+  turn
-            tags.l
-          |=  tag=@t
-          [tag ~[[hash rank=1]]]
-          %+  turn
-            (sift:sift description.l)
+            (sift:sift title.post.l)
           |=  word=@t
-          [word ~[[hash rank=2]]]
+          [word ~[[hash rank=1]]]
+          %+  turn
+            tags.post.l
+          |=  tag=@t
+          [(norm:sift tag) ~[[hash rank=2]]]
+          %+  turn
+            (sift:sift description.post.l)
+          |=  word=@t
+          [word ~[[hash rank=3]]]
+          ~[[type.post.l ~[[hash rank=4]]]]
       ==
-    ~&  -:!>(entries)
-    ~&  -:!>(lookup)
+    =/  keys  ~(tap in ~(key by entries))
+    =.  trail  (~(put by trail) hash keys)
     =.  lookup      
       %-  ~(uni by entries)
       %-  ~(rut by lookup)
       |=  [=key:s value=(list entry:s)]
       ?.  (~(has by entries) key)  value
       (weld value (~(got by entries) key))
+    =.  phonetics
+      %-  
+      %-  ~(uno by phonetics)
+        %-  malt
+        %+  turn  keys
+        |=  =key:s
+        [(utter:m key) (silt ~[key])]
+      |=  [k=key:s v=(set key:s) w=(set key:s)]
+      (~(uni in v) w)
     di-core
   --
 --

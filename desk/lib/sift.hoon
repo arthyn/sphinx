@@ -6,16 +6,31 @@
     (split corpus)
   |=  word=@t
   (~(has in words) word)
+++  norm
+  |=  corpus=@t
+  (crip (cass (trimall (crip (expunge corpus)))))
 ++  split
   |=  corpus=@t
   ^-  (list @t)
-  =/  lines  (crip (trimall corpus))
-  %+  rash  lines
-  (more ace (cook crip (plus alf)))
+  %+  rash  (norm corpus)
+  (more ace (cook crip (plus ;~(pose aln hep))))
+++  allowed  ;~(pose aln hep ace)
+++  banned  ;~(less allowed prn)
+++  expunge
+  |=  corpus=@t
+  ^-  (list @t)
+  %-  zing
+  %+  rash  corpus
+  %-  plus 
+  ;~  pose
+    ;~(pfix (plus banned) (star allowed))
+    ;~(sfix (star allowed) (plus banned))
+    (plus allowed)
+  ==
 ++  trimall
-  |=  value=@t
+  |=  corpus=@t
   |^  ^-  tape
-  %+  rash  value
+  %+  rash  corpus
   %+  ifix  [(star ws) (star ws)]
   %-  star
   ;~  less
