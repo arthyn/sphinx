@@ -1,4 +1,4 @@
-/-  s=seek
+/-  s=sphinx
 |%
 ++  enjs
   =,  enjs:format

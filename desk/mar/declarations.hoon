@@ -1,5 +1,5 @@
-/-  s=seek
-/+  j=seek-json
+/-  s=sphinx
+/+  j=sphinx-json
 |_  d=(list declare:s)
 ++  grad  %noun
 ++  grow

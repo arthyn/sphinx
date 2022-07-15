@@ -1,5 +1,5 @@
-/-  s=seek
-/+  *seek
+/-  s=sphinx
+/+  *sphinx
 :-  %say
 |=  $:  [now=@da eny=@uv =beak]
         [[=post:s ~] ~]

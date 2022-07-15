@@ -23,7 +23,7 @@ function Main() {
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter basename='/apps/seek'>
+      <BrowserRouter basename='/apps/sphinx'>
         <Main />
       </BrowserRouter>
     </QueryClientProvider>

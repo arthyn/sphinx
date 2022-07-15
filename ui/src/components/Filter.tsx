@@ -1,6 +1,6 @@
 import React from 'react';
 import * as Select from '@radix-ui/react-select';
-import { PostFilter, PostType } from '../types/seek';
+import { PostFilter, PostType } from '../types/sphinx';
 
 interface FilterItemProps {
   title: PostFilter;

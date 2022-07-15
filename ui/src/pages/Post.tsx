@@ -6,7 +6,7 @@ import { MultiValue } from 'react-select';
 import api from '../api';
 import { Filter } from '../components/Filter';
 import { Option, TagField } from '../components/TagField';
-import { Declare, Post as PostForm } from '../types/seek';
+import { Declare, Post as PostForm } from '../types/sphinx';
 
 export const Post = () => {
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ export const Post = () => {
 
   const onSubmit = useCallback((values: Omit<PostForm, 'tags'>) => {
     api.poke<Declare>({
-      app: 'seek',
+      app: 'sphinx',
       mark: 'declare',
       json: {
         reach: 'friends',

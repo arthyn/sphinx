@@ -1,5 +1,5 @@
 /-  spider
-/-  s=seek
+/-  s=sphinx
 /+  *strandio
 =,  strand=strand:spider
 =/  posts
@@ -36,5 +36,5 @@
   %+  turn
     posts
   |=  =declare:s
-  [%pass /poke %agent [our %seek] %poke [%declare !>(declare)]]
+  [%pass /poke %agent [our %sphinx] %poke [%declare !>(declare)]]
 (pure:m !>(~))

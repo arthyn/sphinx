@@ -1,4 +1,4 @@
-/-  *seek
+/-  *sphinx
 |%
 ++  iching
   |=  word=@t

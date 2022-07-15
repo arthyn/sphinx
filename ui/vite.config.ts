@@ -9,6 +9,6 @@ export default ({ mode }) => {
   console.log(SHIP_URL);
 
   return defineConfig({
-    plugins: [urbitPlugin({ base: 'seek', target: SHIP_URL, secure: false }), reactRefresh()]
+    plugins: [urbitPlugin({ base: 'sphinx', target: SHIP_URL, secure: false }), reactRefresh()]
   });
 };

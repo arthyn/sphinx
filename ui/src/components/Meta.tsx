@@ -15,7 +15,7 @@ export const Meta = ({ className }: MetaProps) => {
   useEffect(() => {
     if (!version) {
       api.scry<ChargeUpdateInitial>(scryCharges).then(charges => {
-        const version = charges.initial.seek?.version;
+        const version = charges.initial.sphinx?.version;
 
         if (version) {
           setVersion(version);

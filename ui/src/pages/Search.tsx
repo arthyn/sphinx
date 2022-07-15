@@ -4,7 +4,7 @@ import debounce from 'lodash.debounce';
 import { SearchInput } from '../components/SearchInput';
 import { SearchList } from '../components/SearchList';
 import { useQuery } from 'react-query';
-import { PostFilter, PostType, Search as SearchType } from '../types/seek';
+import { PostFilter, PostType, Search as SearchType } from '../types/sphinx';
 import api from '../api';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Paginator } from '../components/Paginator';
@@ -40,7 +40,7 @@ export const Search = () => {
   const pageInt = parseInt(page || '1', 10) - 1;
   const start = pageInt * size;
   const { data } = useQuery<unknown, unknown, SearchType>(`lookup-${selected}-${lookup}-${size}-${start}`, () => api.scry<SearchType>({
-    app: 'seek',
+    app: 'sphinx',
     path: `/lookup/${selected}/${encodeLookup(lookup)}/${start}/${size}`
   }), {
     enabled: !!lookup,

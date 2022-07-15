@@ -1,6 +1,6 @@
-/-  s=seek
+/-  s=sphinx
 /+  gossip, default-agent, verb, dbug
-/+  *seek
+/+  *sphinx
 /+  sift
 /+  m=metaphone
 /$  grab-listing  %noun  %directory-listing

@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import React from 'react';
-import { Listing } from '../types/seek';
+import { Listing } from '../types/sphinx';
 
 interface SearchListProps {
   listings: Listing[];

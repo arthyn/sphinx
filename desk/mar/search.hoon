@@ -1,5 +1,5 @@
-/-  s=seek
-/+  j=seek-json
+/-  s=sphinx
+/+  j=sphinx-json
 |_  =search:s
 ++  grad  %noun
 ++  grow
