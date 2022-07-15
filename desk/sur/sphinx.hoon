@@ -3,6 +3,7 @@
 +$  hash  @uv  :: @uv version of shax result 
 +$  rank  @ud  :: @ud representing priority of listing
 +$  phonetic  @t  :: @t consisting of phonetic characters from metaphone
++$  trigram  @t  :: @t consisting of three characters taken from a word
 ::
 :: an entry points to a listing hash and provides
 :: a semblance of priority for the listing
@@ -56,6 +57,11 @@
 ::  of phonetic to set of lookup keys. we take the query's phonetics and
 ::  use that to add other words to the results.
 +$  phonetics  (map phonetic (set key))
+::
+::  trigrams act similarly to phonetics. we keep a map of trigram to set
+::  of lookup keys. we take the query's trigrams and count how many 
+::  times a particular key comes up.
++$  trigrams  (map trigram (set key))
 ::
 :: trail is a way for us to know all the keys required to update 
 :: a listing with the new hash of it's contents

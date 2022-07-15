@@ -12,6 +12,7 @@
   +$  state-0
     $:  %0
         =lookup:s
+        =trigrams:s
         =phonetics:s
         =trail:s
         =directory:s
@@ -183,7 +184,7 @@
         %-  get-listings
         %-  get-hashes
         %-  sort-entries
-        (get-entries term)
+        (~(get-entries delver [lookup trigrams phonetics]) term)
       |=  =listing:s
       |(=(filter %all) =(filter type.post.listing))
     =/  listings  (swag [start limit] all)
@@ -194,62 +195,6 @@
         (lent all)
     ==
   ==
-++  get-entries
-  |=  =key:s
-  ^-  (list entry:s)
-  =/  title   (norm:sift key)  :: full query
-  =/  parts   (sift:sift key)  :: split query
-  =/  title-entries
-    %-  malt
-    %+  weld
-      (get-phonetics title)
-    (~(gut by lookup) title *(list entry:s))
-  %~  tap  by
-  %-  
-    %~  uni  by   :: union and prefer title entries (better rank)
-    %-  malt
-    %-  zing
-    %+  turn
-      parts
-    |=  word=@t
-    %+  turn
-      %+  weld
-        (get-phonetics word)
-      (~(gut by lookup) word *(list entry:s))
-    |=  =entry:s
-    (derank entry 10)
-  title-entries
-++  get-phonetics
-  |=  =key:s
-  ^-  (list entry:s)
-  =/  keys
-    %+  skim
-      %~  tap  in
-      (~(gut by phonetics) (utter:m key) *(set key:s))
-    |=  [word=key:s]
-    !=(key word)
-  %+  roll
-    keys    
-  |=  [word=key:s entries=(list entry:s)]
-  %+  weld 
-    entries 
-  %+  turn
-    (~(gut by lookup) word *(list entry:s))
-  |=  =entry:s
-  (derank entry 10)
-++  derank
-  |=  [=entry:s offset=@ud]
-  [hash.entry (add rank.entry offset)]  :: phonetically similar should be lower
-++  sort-entries
-  |=  entries=(list entry:s)
-  %+  sort  entries
-  |=  [a=entry:s b=entry:s]
-  (lth rank.a rank.b)
-++  get-hashes
-  |=  entries=(list entry:s)
-  %+  turn  
-    entries
-  |=(=entry:s hash.entry)
 ++  get-listings
   |=  l=(list hash)
   %+  turn  l
@@ -293,6 +238,20 @@
       |=  [=key:s value=(list entry:s)]
       ?.  (~(has by entries) key)  value
       (weld value (~(got by entries) key))
+    =.  trigrams
+      %+  roll
+        %+  snoc
+          %+  turn  keys
+          |=  =key:s
+          %-  malt
+          %+  turn  (iching key)
+          |=  =trigram:s
+          [trigram (silt ~[key])]
+        trigrams
+      |=  [next=trigrams:s t=trigrams:s]
+      %-  (~(uno by t) next)
+      |=  [k=key:s v=(set key:s) w=(set key:s)]
+      (~(uni in v) w)
     =.  phonetics
       %-  
       %-  ~(uno by phonetics)

@@ -1,6 +1,6 @@
 :~  title+'sphinx'
     info+'An Urbit app that does great things'
-    color+0x2e.4347
+    color+0xb2.5068
     glob-http+['https://bootstrap.urbit.org/glob-0v5.hurm4.ejod5.ngg9h.iub9i.n1j7o.glob' 0v5.hurm4.ejod5.ngg9h.iub9i.n1j7o]
     base+'sphinx'
     version+[0 0 1]
