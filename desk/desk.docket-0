@@ -1,8 +1,8 @@
 :~  title+'sphinx'
-    info+'An Urbit app that does great things'
+    info+'An app for answering all your riddles'
     color+0xb2.5068
     image+'https://nyc3.digitaloceanspaces.com/hmillerdev/nocsyx-lassul/2022.7.16..04.35.22-sphinx-web-shifted.svg'
-    glob-http+['https://bootstrap.urbit.org/glob-0v5.hurm4.ejod5.ngg9h.iub9i.n1j7o.glob' 0v5.hurm4.ejod5.ngg9h.iub9i.n1j7o]
+    glob-http+['https://nyc3.digitaloceanspaces.com/hmillerdev/glob-0v3.v4sec.6omd9.v4ott.hbla7.o1u5j.glob' 0v3.v4sec.6omd9.v4ott.hbla7.o1u5j]
     base+'sphinx'
     version+[0 0 1]
     website+'https://github.com'
