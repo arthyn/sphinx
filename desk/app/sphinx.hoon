@@ -11,6 +11,9 @@
 =>
   |%
   +$  card  card:agent:gall
+  +$  edition
+    $%  state-0
+    ==
   +$  state-0
     $:  %0
         =lookup:s
@@ -44,21 +47,14 @@
     [cards this]
   ::
   ++  on-save  !>(state)
-  ++  on-load
-    |=  =vase
-    ^-  (quip card _this)
-    =/  old=(unit state-0)
-      (mole |.(!<(state-0 vase)))  
-    ?^  old  `this(state u.old)
-    ~&  >>>  "Incompatible load, nuking"
-    =^  cards  this  on-init
-    :_  this
-    =-  (welp - cards)
-    %+  turn  ~(tap in ~(key by wex.bowl))
-    |=  [=wire =ship =term] 
-    ^-  card
-    [%pass wire %agent [ship term] %leave ~]
-  ::
+    ++  on-load
+      |=  =vase
+      ^-  (quip card _this)
+      =/  old  !<(edition vase)
+      ?-  -.old
+        %0  `this(state old)
+      ==
+    ::
   ++  on-poke
     |=  [=mark =vase]
     ^-  (quip card _this)

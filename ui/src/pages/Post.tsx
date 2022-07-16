@@ -30,7 +30,7 @@ export const Post = () => {
     }
   });
 
-  const { register, watch, reset, setValue, handleSubmit, formState } = form;
+  const { register, watch, reset, setValue, handleSubmit } = form;
 
   const updateImg = useRef(debounce(setImage));
   const img = watch('image');
