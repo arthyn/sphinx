@@ -1,13 +1,16 @@
 import cn from 'classnames';
-import React from 'react';
-import { Listing } from '../types/sphinx';
+import React, { useCallback } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
+import api from '../api';
+import { Listing, Remove } from '../types/sphinx';
 
 interface SearchListProps {
   listings: Listing[];
+  remove: (hash: string) => void;
   className?: string;
 }
 
-export const SearchList = ({ listings, className }: SearchListProps) => {
+export const SearchList = ({ listings, remove, className }: SearchListProps) => {
   if (!listings) {
     return null;
   }
@@ -37,11 +40,12 @@ export const SearchList = ({ listings, className }: SearchListProps) => {
                 </div>
               </a>
               <p className='mb-2 text-sm'>{l.post.description}</p>              
-              <div className='flex font-mono text-xs text-zinc-500 space-x-3 opacity-0 group-hover:opacity-100 transition-opacity'>                
+              <div className='flex items-center w-full font-mono text-xs text-zinc-500 opacity-0 group-hover:opacity-100 transition-opacity'>                
                 <span><span className='font-semibold font-sans'>by:</span> {l.source}</span>
-                <time dateTime={(new Date(l.time)).toISOString()}>
+                <time dateTime={(new Date(l.time)).toISOString()} className="ml-3">
                   {(new Date(l.time)).toLocaleString()}
                 </time>
+                <button className='ml-auto font-semibold font-sans hover:text-rosy bg-transparent border-0' onClick={() => remove(l.hash)}>remove</button>
               </div>  
             </div>
           </article>

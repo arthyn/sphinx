@@ -1,10 +1,12 @@
 /-  s=sphinx
 /+  gossip, default-agent, verb, dbug
 /+  *sphinx
+/+  *validate-url
 /+  sift
 /+  m=metaphone
 /$  grab-listing  %noun  %directory-listing
 /$  grab-directory  %noun  %directory
+=,  de-purl:html
 ^-  agent:gall
 =>
   |%
@@ -103,10 +105,9 @@
       %declare
     =+  !<(=declare:s vase)
     di-abet:(publish declare di-core)
-    ::    %declarations
-    :: =+  !<(declared=(list declare:s) vase)
-    :: =.  di-core  (roll declared publish)
-    :: cor
+      %remove
+    =+  !<(=hash:s vase)
+    di-abet:di-remove:(di-abed:di-core hash)
   ==
   ++  publish
     |=  [=declare:s core=_di-core]
@@ -123,7 +124,6 @@
     ?:  (~(has by directory) hash.listing)
       ~&  'Listing already exists.'
       di-core
-    =.  published  (~(put by directory) hash.listing listing)
     (di-publish:(di-abed:core hash.listing) listing)
   --
 :: 
@@ -201,16 +201,50 @@
   |=(=hash:s (~(got by directory) hash))
 ++  from-self  =(our src):bowl
 ++  di-core
-  |_  [=listing:s =hash:s]
+  |_  [=listing:s =hash:s gone=_|]
   ++  di-core  .
   ++  di-abet
-    cor(directory (~(put by directory) hash listing))
+    =.  directory
+      ?:  gone  (~(del by directory) hash)
+    (~(put by directory) hash listing)
+    cor
   ++  di-abed
     |=  h=hash:s
     di-core(hash h, listing (~(gut by directory) h *listing:s))
+  ++  di-remove
+    =.  gone    &
+    =/  keys    (~(got by trail) hash)
+    =.  trail   (~(del by trail) hash)
+    =.  lookup
+      ^-  lookup:s
+      %-  ~(uni by lookup)
+      %-  malt
+      %+  turn
+        keys
+      |=  =key:s
+      :-  key
+      ^-  (list entry:s)
+      %+  skip
+        (~(got by lookup) key)
+      |=([h=hash:s =rank:s] =(h hash))
+    =?  published  (~(has by published) hash)
+      (~(del by published) hash)
+    di-core
   ++  di-publish
     |=  l=listing:s
     =.  listing  l
+    ?>  (lte (lent (trip title.post.l)) 77)
+    ?>  (lte (lent (trip description.post.l)) 256)
+    ?>  (lte (lent tags.post.l) 8)
+    ?>  (lte (lent (trip link.post.l)) 1.024)
+    ?>  (lte (lent (trip image.post.l)) 1.024)
+    =.  cor
+      ?:  =(image.post.l '')  cor
+        =/  image  (validate image.post.l)
+        cor
+    =/  link  (validate link.post.l)
+    ::  TODO check urls and sanitize
+    =.  published  (~(put by directory) hash.listing listing)
     =.  cor  (emit (invent:gossip %directory-listing !>(listing)))
     =/  entries=lookup:s
       %-  malt

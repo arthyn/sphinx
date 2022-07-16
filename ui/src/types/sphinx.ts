@@ -7,6 +7,8 @@ export interface Declare {
   post: Post
 }
 
+export type Remove = string;
+
 export interface Post {
   title: string;
   type: PostType;

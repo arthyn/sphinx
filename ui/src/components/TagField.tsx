@@ -137,6 +137,7 @@ export const TagField = ({ tags, onTags, className }: TagFieldProps) => {
           padding: 0
         })
       }}
+      isOptionDisabled={() => tags.length >= 8}
       inputValue={input}
       isClearable
       isMulti
