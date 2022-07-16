@@ -1,6 +1,7 @@
 :~  title+'sphinx'
     info+'An Urbit app that does great things'
     color+0xb2.5068
+    image+'https://nyc3.digitaloceanspaces.com/hmillerdev/nocsyx-lassul/2022.7.16..04.35.22-sphinx-web-shifted.svg'
     glob-http+['https://bootstrap.urbit.org/glob-0v5.hurm4.ejod5.ngg9h.iub9i.n1j7o.glob' 0v5.hurm4.ejod5.ngg9h.iub9i.n1j7o]
     base+'sphinx'
     version+[0 0 1]
