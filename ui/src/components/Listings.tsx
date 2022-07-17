@@ -49,7 +49,7 @@ export const Listings = ({ listings, remove, className }: ListingsProps) => {
                     <span className='font-semibold font-sans mr-1'>by:</span> 
                     <span>{l.source}</span>
                     {outgoing[deSig(l.source) || ''] && (
-                      <button className='group-2 relative inline-flex items-center justify-center px-2 hover:text-rosy' aria-label='Remove pal' title="Remove Pal" onClick={() => removePal(deSig(l.source))}>
+                      <button className='group-2 relative inline-flex items-center justify-center px-2 hover:text-rosy' aria-label='Remove pal' title="Remove Pal" onClick={() => removePal(deSig(l.source) || '')}>
                         <UsersIcon className='h-4 w-4 group-2-hover:opacity-0' />
                         <UserRemoveIcon className='absolute h-4 w-4 opacity-0 group-2-hover:opacity-100' />
                       </button>
