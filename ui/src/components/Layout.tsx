@@ -8,10 +8,10 @@ export const Layout = () => {
 
   return (
     <main className={cn("flex flex-col items-center min-h-screen", !params.lookup && 'justify-center')}>
-      <div className="max-w-2xl w-full p-4 sm:py-12 px-8 space-y-6">
+      <div className="max-w-2xl w-full p-4 sm:py-12 sm:px-8 space-y-6">
         <Outlet />
       </div>
-      <Meta className='self-start mx-10 my-6 sm:m-0 sm:fixed left-4 bottom-4 text-sm'/>
+      <Meta className='self-start mx-4 mb-6 mt-auto sm:m-0 sm:fixed left-4 bottom-4 text-sm'/>
     </main>
   )
 }

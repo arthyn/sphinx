@@ -152,7 +152,11 @@
       ::
           %directory
         =+  !<(d=directory:s vase)
-        cor(directory (~(uni by directory) d))
+        =.  directory  (~(uni by directory) d)
+        %+  roll
+          ~(tap by d)
+        |=  [[=hash:s l=listing:s] c=_cor]
+        (index:c hash l)
       ==
     ==
   ==
@@ -229,68 +233,71 @@
   ++  di-publish
     |=  l=listing:s
     =.  listing  l
-    ?>  (lte (lent (trip title.post.l)) 77)
-    ?>  (lte (lent (trip description.post.l)) 256)
-    ?>  (lte (lent tags.post.l) 8)
-    ?>  (lte (lent (trip link.post.l)) 1.024)
-    ?>  (lte (lent (trip image.post.l)) 1.024)
-    =.  cor
-      ?:  =(image.post.l '')  cor
-        =/  image  (validate image.post.l)
-        cor
-    =/  link  (validate link.post.l)
-    ::  TODO check urls and sanitize
+    =.  cor  (index hash l)
     =.  published  (~(put by directory) hash.listing listing)
-    =.  cor  (emit (invent:gossip %directory-listing !>(listing)))
-    =/  entries=lookup:s
-      %-  malt
-      %-  zing
-      :~  ~[[(crip (cass (trip title.post.l))) ~[[hash rank=0]]]]
-          %+  turn
-            (sift:sift title.post.l)
-          |=  word=@t
-          [word ~[[hash rank=1]]]
-          %+  turn
-            tags.post.l
-          |=  tag=@t
-          [(norm:sift tag) ~[[hash rank=2]]]
-          %+  turn
-            (sift:sift description.post.l)
-          |=  word=@t
-          [word ~[[hash rank=3]]]
-          ~[[type.post.l ~[[hash rank=4]]]]
-      ==
-    =/  keys  ~(tap in ~(key by entries))
-    =.  trail  (~(put by trail) hash keys)
-    =.  lookup      
-      %-  ~(uni by entries)
-      %-  ~(rut by lookup)
-      |=  [=key:s value=(list entry:s)]
-      ?.  (~(has by entries) key)  value
-      (weld value (~(got by entries) key))
-    =.  trigrams
-      %+  roll
-        %+  snoc
-          %+  turn  keys
-          |=  =key:s
-          %-  malt
-          %+  turn  (iching key)
-          |=  =trigram:s
-          [trigram (silt ~[key])]
-        trigrams
-      |=  [next=trigrams:s t=trigrams:s]
-      %-  (~(uno by t) next)
-      |=  [k=key:s v=(set key:s) w=(set key:s)]
-      (~(uni in v) w)
-    =.  phonetics
-      %-  
-      %-  ~(uno by phonetics)
-        %-  malt
-        %+  turn  keys
-        |=  =key:s
-        [(utter:m key) (silt ~[key])]
-      |=  [k=key:s v=(set key:s) w=(set key:s)]
-      (~(uni in v) w)
+    =.  cor  (emit (invent:gossip %directory-listing !>(listing)))  
     di-core
   --
+++  index
+  |=  [=hash:s l=listing:s]
+  ?>  (lte (lent (trip title.post.l)) 77)
+  ?>  (lte (lent (trip description.post.l)) 256)
+  ?>  (lte (lent tags.post.l) 8)
+  ?>  (lte (lent (trip link.post.l)) 1.024)
+  ?>  (lte (lent (trip image.post.l)) 1.024)
+  =.  cor
+    ?:  =(image.post.l '')  cor
+      =/  image  (validate image.post.l)
+      cor
+  =/  link  (validate link.post.l)
+  =/  entries=lookup:s
+    %-  malt
+    %-  zing
+    :~  ~[[(crip (cass (trip title.post.l))) ~[[hash rank=0]]]]
+        %+  turn
+          (sift:sift title.post.l)
+        |=  word=@t
+        [word ~[[hash rank=1]]]
+        %+  turn
+          tags.post.l
+        |=  tag=@t
+        [(norm:sift tag) ~[[hash rank=2]]]
+        %+  turn
+          (sift:sift description.post.l)
+        |=  word=@t
+        [word ~[[hash rank=3]]]
+        ~[[type.post.l ~[[hash rank=4]]]]
+    ==
+  =/  keys  ~(tap in ~(key by entries))
+  =.  trail  (~(put by trail) hash keys)
+  =.  lookup      
+    %-  ~(uni by entries)
+    %-  ~(rut by lookup)
+    |=  [=key:s value=(list entry:s)]
+    ?.  (~(has by entries) key)  value
+    (weld value (~(got by entries) key))
+  =.  trigrams
+    %+  roll
+      %+  snoc
+        %+  turn  keys
+        |=  =key:s
+        %-  malt
+        %+  turn  (iching key)
+        |=  =trigram:s
+        [trigram (silt ~[key])]
+      trigrams
+    |=  [next=trigrams:s t=trigrams:s]
+    %-  (~(uno by t) next)
+    |=  [k=key:s v=(set key:s) w=(set key:s)]
+    (~(uni in v) w)
+  =.  phonetics
+    %-  
+    %-  ~(uno by phonetics)
+      %-  malt
+      %+  turn  keys
+      |=  =key:s
+      [(utter:m key) (silt ~[key])]
+    |=  [k=key:s v=(set key:s) w=(set key:s)]
+    (~(uni in v) w)
+  cor
 --

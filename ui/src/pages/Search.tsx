@@ -1,17 +1,17 @@
 import cn from 'classnames';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import debounce from 'lodash.debounce';
-import { SearchInput } from '../components/SearchInput';
-import { SearchList } from '../components/SearchList';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { PostFilter, PostType, Remove, Search as SearchType } from '../types/sphinx';
-import api from '../api';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Paginator } from '../components/Paginator';
+import { useNavigate, useParams } from 'react-router-dom';
 import { stringToTa } from '@urbit/api';
+import { SearchInput } from '../components/SearchInput';
+import { Listings } from '../components/Listings';
+import { PostFilter, Remove, Search as SearchType } from '../types/sphinx';
+import api from '../api';
+import { Paginator } from '../components/Paginator';
 import { Filter } from '../components/Filter';
-import { Meta } from '../components/Meta';
-import { DocumentAddIcon, PlusCircleIcon, PlusIcon } from '@heroicons/react/solid';
+import { PlusSmIcon } from '@heroicons/react/solid';
+import { usePals } from '../state/pals';
 
 interface RouteParams extends Record<string, string | undefined> {
   lookup?: string;
@@ -36,6 +36,7 @@ export const Search = () => {
   } = useParams<RouteParams>();
   const [selected, setSelected] = useState<PostFilter>('all')
   const [rawSearch, setRawSearch] = useState(lookup || '');
+  const { installed: palsInstalled } = usePals();
   const size = parseInt(limit || '10', 10);
   const pageInt = parseInt(page || '1', 10) - 1;
   const start = pageInt * size;
@@ -57,7 +58,7 @@ export const Search = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(`lookup-${selected}-${lookup}-${size}-${start}`)
     }
-  })
+  });
 
   const total = data?.total || 0;
 	const pages =
@@ -90,12 +91,21 @@ export const Search = () => {
     <>
       <header className='flex items-center space-x-2'>
         <SearchInput className='flex-1' lookup={rawSearch} onChange={onChange} />
-        <Filter selected={selected} onSelect={setSelected} />
+        <Filter selected={selected} onSelect={setSelected} className="min-w-0 sm:w-20" />
       </header>
+      {!palsInstalled && (
+        <div>
+          <a href="/apps/grid/leap/search/~paldev/apps/~paldev/pals" className='inline-flex items-center py-1 px-2 mr-2 font-semibold  bg-green-800 text-linen rounded-md'>
+            <PlusSmIcon className='h-4 w-4' />
+            install pals
+          </a>
+          to see listings from others
+        </div>
+      )}
       {lookup && data && <div className='flex justify-end border-t border-zinc-300'>
         <Paginator pages={pages} currentPage={pageInt} linkBuilder={linkBuild} />
       </div>}
-      {lookup && <SearchList listings={data?.listings || []} remove={mutate} />}
+      {lookup && <Listings listings={data?.listings || []} remove={mutate} />}
       {data && pages > 1 && <div className='flex justify-end border-t border-zinc-300'>
         <Paginator pages={pages} currentPage={pageInt} linkBuilder={linkBuild} />
       </div>}

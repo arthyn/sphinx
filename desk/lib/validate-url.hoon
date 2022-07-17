@@ -2,7 +2,6 @@
 ++  validate
   |=  url=@t
   ^-  @t
-  ~&  url
   %+  rash  url
   %+  cold  url
   ;~  plug    

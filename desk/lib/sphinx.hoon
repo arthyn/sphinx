@@ -105,7 +105,6 @@
     |=  term=@t
     ^-  (list @t)
     =/  tally   (get-term-counts term)
-    ~&  tally
     =/  tallys  ~(tap by tally)
     =/  count   (lent (iching term))
     %+  turn

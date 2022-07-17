@@ -34,7 +34,7 @@ export function Filter<T extends string>({ selected, onSelect, className, showAl
     <div className={className}>
       <Select.Root value={selected} onValueChange={onSelect}>
         <span className="sr-only">Filter Type</span>
-        <Select.Trigger className="bg-linen flex justify-between w-32 font-semibold border border-fawn/30 rounded-lg shadow-sm pl-3 pr-2 py-1.5 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-rosy focus:border-rosy sm:text-sm">
+        <Select.Trigger className="bg-linen flex justify-between w-full font-semibold border border-fawn/30 rounded-lg shadow-sm pl-3 pr-2 py-1.5 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-rosy focus:border-rosy sm:text-sm">
           <Select.Value>%{selected}</Select.Value>
           <Select.Icon asChild>
             <svg className="h-5 w-5 text-rosy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
