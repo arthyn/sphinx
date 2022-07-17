@@ -2,9 +2,9 @@
     info+'An app for answering all your riddles'
     color+0xb2.5068
     image+'https://nyc3.digitaloceanspaces.com/hmillerdev/nocsyx-lassul/2022.7.16..04.35.22-sphinx-web-shifted.svg'
-    glob-http+['https://nyc3.digitaloceanspaces.com/hmillerdev/glob-0v3.v4sec.6omd9.v4ott.hbla7.o1u5j.glob' 0v3.v4sec.6omd9.v4ott.hbla7.o1u5j]
+    glob-http+['http://hmillerdev.nyc3.digitaloceanspaces.com/sphinx/glob-0vb8b8l.rmk5k.kmfli.fbeuf.c82vn.glob' 0vb8b8l.rmk5k.kmfli.fbeuf.c82vn]
     base+'sphinx'
-    version+[0 0 1]
+    version+[0 0 2]
     website+'https://github.com'
     license+'MIT'
 ==
