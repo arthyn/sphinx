@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import api from '../api';
 import { PostOptions } from '../components/PostOptions';
 import { useGroups } from '../state/groups';
-import { PostOption, PostOptionsForm } from '../types/sphinx';
+import { Declare, PostOption, PostOptionsForm } from '../types/sphinx';
 
 export const Groups = () => {
   const groups = useGroups();
@@ -34,7 +35,16 @@ export const Groups = () => {
     }
   }, [groups, options, setValue]);
 
-  const onSubmit = useCallback(() => {
+  const onSubmit = useCallback((values: PostOptionsForm) => {
+    api.poke<Declare[]>({
+      app: 'sphinx',
+      mark: 'declarations',
+      json: groups.filter(a => values.options.includes(a.key)).map(a => ({
+        post: a.post,
+        reach: 'friends'
+      }))
+    });
+
     reset();
   }, [reset]);
 

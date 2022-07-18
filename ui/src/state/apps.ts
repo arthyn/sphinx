@@ -4,12 +4,12 @@ import api from "../api";
 import { Post } from "../types/sphinx";
 
 function getAppPost(app: string, vat: Vat, charge: Charge): Post {
-  const ship = vat.arak.rail?.publisher || vat.arak.rail?.ship;
+  const ship = vat.arak.rail?.publisher || vat.arak.rail?.ship || `~${window.ship}`;
 
   return {
     type: 'app',
     title: charge.title,
-    link: `${ship}/${app}`,
+    link: `web+urbitgraph://${ship}/${app}`,
     description: charge.info || charge.title,
     image: charge.image || '',
     tags: ['app']

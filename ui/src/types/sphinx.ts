@@ -33,6 +33,10 @@ export type Search = {
   total: number;
 }
 
+export interface Directory {
+  [hash: string]: Listing;
+}
+
 export interface PostOption {
   post: Post;
   key: string;

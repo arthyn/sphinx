@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import api from '../api';
 import { PostOptions } from '../components/PostOptions';
 import { useApps } from '../state/apps';
-import { PostOption, PostOptionsForm } from '../types/sphinx';
+import { Declare, Listing, PostOption, PostOptionsForm } from '../types/sphinx';
 
 function getAppKeys(apps: PostOption[]): string[] {
   return apps.map(({ key }) => key);
@@ -27,9 +28,19 @@ export const Apps = () => {
     }
   }, [apps, options, setValue]);
 
-  const onSubmit = useCallback(() => {
+  const onSubmit = useCallback((values: PostOptionsForm) => {
+    debugger;
+    api.poke<Declare[]>({
+      app: 'sphinx',
+      mark: 'declarations',
+      json: apps.filter(a => values.options.includes(a.key)).map(a => ({
+        post: a.post,
+        reach: 'friends'
+      }))
+    });
+
     reset();
-  }, [reset]);
+  }, [apps, reset]);
 
   return (
     <>

@@ -27,7 +27,7 @@ export const Listings = ({ listings, remove, className }: ListingsProps) => {
   }
 
   return (
-    <ul className={cn('px-2 space-y-6', className)}>
+    <ul className={cn('space-y-6', className)}>
       {listings && listings.map(l => (
         <li key={l.hash}>
           <article className='group-1 flex w-full'>

@@ -31,7 +31,7 @@ export const Meta = ({ className }: MetaProps) => {
         {version && <span className='mb-[3px]'>v{version}</span>}
       </div>
       <a
-        className="inline-block font-mono default-ring underline rounded-md hover:text-rosy mb-4"
+        className="inline-block font-mono default-ring underline rounded-md hover:text-rosy"
         href="web+urbitgraph://group/~nocsyx-lassul/sphinx"
       >
         ~nocsyx-lassul/sphinx

@@ -100,14 +100,20 @@
   ?+    mark  ~|(bad-poke/mark !!)
       %declare
     =+  !<(=declare:s vase)
-    di-abet:(publish declare di-core)
+    (publish declare cor)
+    ::
+      %declarations
+    =+  !<(decs=(list declare:s) vase)
+    =.  cor  (roll decs publish)
+    cor
+    ::
       %remove
     =+  !<(=hash:s vase)
     di-abet:di-remove:(di-abed:di-core hash)
   ==
   ++  publish
-    |=  [=declare:s core=_di-core]
-    ^+  di-core
+    |=  [=declare:s core=_cor]
+    ^+  cor
     ::  
     ?>  from-self
     =/  listing
@@ -119,8 +125,8 @@
       ==
     ?:  (~(has by directory) hash.listing)
       ~&  'Listing already exists.'
-      di-core
-    (di-publish:(di-abed:core hash.listing) listing)
+      cor
+    di-abet:(di-publish:(di-abed:di-core:core hash.listing) listing)
   --
 :: 
 ++  watch
@@ -169,6 +175,9 @@
   |=  =path
   ^-  (unit (unit cage))
   ?+  path  [~ ~]
+      [%x %published ~]
+    ``directory+!>(published)
+  ::
       [%x %lookup @ @ @ @ ~]  
     =-  ``search+!>(-)
     ^-  search:s

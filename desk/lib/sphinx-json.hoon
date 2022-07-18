@@ -30,6 +30,12 @@
         size/n/(scot %ud size.search)
         total/n/(scot %ud total.search)
     ==
+  ++  directory
+    |=  d=directory:s
+    %-  pairs
+    %+  turn  ~(tap by d)
+    |=  [=hash:s l=listing:s]
+    [(scot %uv hash) (listing l)]
   --
 ++  dejs
   =,  dejs:format

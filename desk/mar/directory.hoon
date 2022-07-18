@@ -5,6 +5,7 @@
 ++  grow
   |%
   ++  noun  directory
+  ++  json  (directory:enjs:j directory)
   --
 ++  grab
   |%
