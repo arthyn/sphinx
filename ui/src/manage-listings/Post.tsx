@@ -17,7 +17,6 @@ function errorMessages(length: number) {
 }
 
 export const Post = () => {
-  const navigate = useNavigate();
   const [tags, setTags] = useState<MultiValue<Option>>([]);
   const [image, setImage] = useState<string>('');
   const form = useForm<PostForm>({
@@ -108,9 +107,9 @@ export const Post = () => {
               </div>
               <div className='pt-3'>
                 <div className='flex justify-between border-t border-zinc-300 py-3'>
-                  <button type="button" className='flex items-center rounded-lg text-base font-semibold text-rosy bg-rosy/30 border-2 border-transparent hover:border-rosy leading-none py-2 px-3 transition-colors' onClick={() => navigate(-1)}>
+                  <Link to="/search" className='flex items-center rounded-lg text-base font-semibold text-rosy bg-rosy/30 border-2 border-transparent hover:border-rosy leading-none py-2 px-3 transition-colors'>
                     Back to Search
-                  </button>
+                  </Link>
                   <button type="submit" className='flex items-center rounded-lg text-base font-semibold text-linen bg-rosy border-2 border-transparent hover:border-linen/60 leading-none py-2 px-3 transition-colors'>
                     Publish
                   </button>

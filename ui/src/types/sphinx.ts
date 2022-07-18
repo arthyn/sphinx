@@ -32,3 +32,12 @@ export type Search = {
   size: number;
   total: number;
 }
+
+export interface PostOption {
+  post: Post;
+  key: string;
+}
+
+export interface PostOptionsForm {
+  options: string[];
+}

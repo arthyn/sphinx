@@ -36,10 +36,6 @@ export const Meta = ({ className }: MetaProps) => {
       >
         ~nocsyx-lassul/sphinx
       </a>
-      <Link to="/post" className="flex items-center rounded-lg text-base font-semibold text-rosy bg-rosy/30 border-2 border-transparent hover:border-rosy p-2 transition-colors">
-        <PlusIcon className='h-4 w-4 mr-1' />
-        Add a Listing
-      </Link>
     </footer>
   )
 }

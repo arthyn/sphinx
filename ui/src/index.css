@@ -5,3 +5,12 @@
 .flip {
   transform: rotateY(180deg);
 }
+
+input:checked + label .show-when-checked {
+  @apply opacity-100;
+}
+
+input:checked + .checked-bg-fawn,
+input:checked + label .checked-bg-fawn {
+  @apply bg-fawn;
+}
