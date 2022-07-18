@@ -1,25 +1,31 @@
 import { GroupUpdateInitial, MetadataUpdateInitial } from "@urbit/api";
-import { useQuery, useQueryClient } from "react-query"
+import { useQuery } from "react-query"
 import api from "../api"
-import { PostOption } from "../types/sphinx";
+import { PostOption, PostType, Search } from "../types/sphinx";
 
 
 
 export const useGroups = (): PostOption[] => {
   const { data } = useQuery('metadata', () => api.subscribeOnce<{ 'metadata-update': MetadataUpdateInitial }>('metadata-store', '/all'));
   const { data: groupData } = useQuery('groups', () => api.subscribeOnce<{ groupUpdate: GroupUpdateInitial }>('group-store', '/groups'));
+  const { data: d } = useQuery('group-listings', () => api.scry<Search>({
+    app: 'sphinx',
+    path: '/lookup/group/0/999'
+  }));
 
-  //web+urbitgraph://group/~nocsyx-lassul/celestial-systems
-  console.log(data, groupData)
+  if (!data || !groupData || !d) {
+    return [];
+  }
 
-  return data && groupData ? Object.entries(data['metadata-update'].associations)
+  return Object.entries(data['metadata-update'].associations)
     .filter(([k,v]) => v['app-name'] === 'groups' && 'open' in (groupData.groupUpdate.initial[v.resource]?.policy || {})) 
     .map(([k,v]) => ({ key: k, post: {
-      type: 'group',
+      type: 'group' as PostType,
       title: v.metadata.title,
       link: v.group.replace('/ship/', 'web+urbitgraph://group/'),
       image: v.metadata.picture,
       description: v.metadata.description,
       tags: ['group']
-    }})) : [];
+    }}))
+    .filter(({ post }) => !d.listings.some(l => l.post.link === post.link || l.post.title === post.title));
 }

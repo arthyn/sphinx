@@ -1,7 +1,7 @@
 import { Charge, ChargeUpdateInitial, getVats, scryCharges, Vat, Vats } from "@urbit/api";
 import { useQuery } from "react-query"
 import api from "../api";
-import { Post } from "../types/sphinx";
+import { Post, Search } from "../types/sphinx";
 
 function getAppPost(app: string, vat: Vat, charge: Charge): Post {
   const ship = vat.arak.rail?.publisher || vat.arak.rail?.ship || `~${window.ship}`;
@@ -19,6 +19,17 @@ function getAppPost(app: string, vat: Vat, charge: Charge): Post {
 export const useApps = () => {
   const { data: vats } = useQuery('vats', () => api.scry<Vats>(getVats));
   const { data: charges } = useQuery('charges', () => api.scry<ChargeUpdateInitial>(scryCharges));
+  const { data } = useQuery('app-listings', () => api.scry<Search>({
+    app: 'sphinx',
+    path: '/lookup/app/0/999'
+  }));
 
-  return vats && charges ? Object.entries(charges.initial).filter(([k]) => k in vats).map(([k,v]) => ({ key: k, post: getAppPost(k, vats[k], v) })) : [];
+  if (!vats || !charges || !data) {
+    return [];
+  }
+
+  return Object.entries(charges.initial)
+    .filter(([k]) => k in vats)
+    .map(([k,v]) => ({ key: k, post: getAppPost(k, vats[k], v) }))
+    .filter(({ post }) => !data.listings.some(l => l.post.link === post.link || l.post.title === post.title));
 }

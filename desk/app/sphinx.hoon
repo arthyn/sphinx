@@ -178,17 +178,25 @@
       [%x %published ~]
     ``directory+!>(published)
   ::
-      [%x %lookup @ @ @ @ ~]  
+      [%x %lookup @ @ @ $@(~ [@ ~])]  
     =-  ``search+!>(-)
     ^-  search:s
     =/  filter  
       %+  rash  i.t.t.path 
       (perk [%app %group %content %other %all ~])
-    =/  term   `@t`(slav %t i.t.t.t.path)
-    =/  start  (slav %ud i.t.t.t.t.path)
-    =/  limit  (slav %ud i.t.t.t.t.t.path)
+    =/  start  (slav %ud i.t.t.t.path)
+    =/  limit  (slav %ud i.t.t.t.t.path)
+    =/  term   
+      ?^  t.t.t.t.t.path  
+        `@t`(slav %t i.t.t.t.t.t.path)
+      ~
     ::  expects encoded @t values)
     =/  all
+      ?~  term
+        %+  skim
+          ~(val by directory)
+        |=  =listing:s
+        |(=(filter %all) =(filter type.post.listing))
       %+  skim
         %-  get-listings
         %-  get-hashes

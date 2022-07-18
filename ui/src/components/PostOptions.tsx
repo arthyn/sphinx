@@ -16,7 +16,7 @@ export const PostOptions = ({ options, emptyMessage, className }: PostOptionsPro
   if (options.length === 0) {
     return (
       <div>
-        <h2 className='text-xl font-semibold'>{emptyMessage}</h2>
+        <h2 className='text-lavender'>{emptyMessage}</h2>
       </div>
     )
   }

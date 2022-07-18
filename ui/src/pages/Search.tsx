@@ -40,9 +40,9 @@ export const Search = () => {
   const size = parseInt(limit || '10', 10);
   const pageInt = parseInt(page || '1', 10) - 1;
   const start = pageInt * size;
-  const { data } = useQuery<unknown, unknown, SearchType>(`lookup-${selected}-${lookup}-${size}-${start}`, () => api.scry<SearchType>({
+  const { data } = useQuery<unknown, unknown, SearchType>(`lookup-${selected}-${size}-${start}-${lookup}`, () => api.scry<SearchType>({
     app: 'sphinx',
-    path: `/lookup/${selected}/${encodeLookup(lookup)}/${start}/${size}`
+    path: `/lookup/${selected}/${start}/${size}/${encodeLookup(lookup)}`
   }), {
     enabled: !!lookup,
     keepPreviousData: true
@@ -56,7 +56,7 @@ export const Search = () => {
     })
   }, {
     onSuccess: () => {
-      queryClient.invalidateQueries(`lookup-${selected}-${lookup}-${size}-${start}`)
+      queryClient.invalidateQueries(`lookup-${selected}-${size}-${start}-${lookup}`)
     }
   });
 
