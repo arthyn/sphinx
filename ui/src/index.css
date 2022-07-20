@@ -14,3 +14,7 @@ input:checked + .checked-bg-fawn,
 input:checked + label .checked-bg-fawn {
   @apply bg-fawn;
 }
+
+.spinner {
+  @apply inline-flex items-center w-6 h-6 animate-spin;
+}

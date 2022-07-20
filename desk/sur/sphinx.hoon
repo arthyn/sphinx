@@ -27,6 +27,7 @@
       description=@t
       tags=(list @t)
       image=@t
+      color=@t
   ==
 ::
 +$  reach  ?(%private %friends %public)
@@ -81,4 +82,25 @@
       total=@ud
   ==
 ::
+++  directory-state-zero
+  |%
+  +$  post
+    $:  title=@t
+        type=post-type
+        link=@t
+        description=@t
+        tags=(list @t)
+        image=@t
+    ==
+  ::
+  +$  listing
+    $:  =post
+        =hash
+        =reach
+        source=@p 
+        time=@da 
+    ==
+  ::
+  +$  directory  (map hash listing)
+  --
 --

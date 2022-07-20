@@ -1,5 +1,5 @@
 import { UserRemoveIcon, UsersIcon } from '@heroicons/react/solid';
-import { deSig } from '@urbit/api';
+import { deSig, uxToHex } from '@urbit/api';
 import cn from 'classnames';
 import React from 'react';
 import { usePals } from '../state/pals';
@@ -32,8 +32,17 @@ export const Listings = ({ listings, remove, className }: ListingsProps) => {
         <li key={l.hash}>
           <article className='group-1 flex w-full'>
             {l.post.image ? (
-              <img src={l.post.image} className="w-24 h-24 object-cover rounded-xl" />
-              ) : <div className='w-24 h-24 bg-rosy/20 rounded-xl' />}
+              <img 
+                src={l.post.image} 
+                className="w-24 h-24 object-cover rounded-xl" 
+                style={{ backgroundColor: l.post.color ? `#${uxToHex(l.post.color)}` : undefined }}
+              />
+            ) : (
+              <div 
+                className='w-24 h-24 bg-rosy/20 rounded-xl' 
+                style={{ backgroundColor: l.post.color ? `#${uxToHex(l.post.color)}` : undefined }}
+              />
+            )}
             <div className='flex-1 ml-4'>
               <a className='block w-full mb-2 hover:text-rosy transition-colors' href={l.post.link}>
                 <h2 className='block font-semibold text-lg leading-none mb-1'>{l.post.title}</h2>                

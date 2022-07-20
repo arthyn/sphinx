@@ -14,6 +14,7 @@ export interface Post {
   type: PostType;
   description: string;
   image: string;
+  color: string;
   tags: string[];
   link: string;
 }

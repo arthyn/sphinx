@@ -1,13 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useMutation, useQueryClient } from 'react-query';
 import { Link } from 'react-router-dom';
 import api from '../api';
 import { PostOptions } from '../components/PostOptions';
+import { Spinner } from '../components/Spinner';
 import { useGroups } from '../state/groups';
 import { Declare, PostOption, PostOptionsForm } from '../types/sphinx';
 
 export const Groups = () => {
-  const groups = useGroups();
+  const { groups, loading } = useGroups();
   const [firstLoad, setFirstLoad] = useState(true);
   const form = useForm<PostOptionsForm>({
     defaultValues: {
@@ -35,8 +37,9 @@ export const Groups = () => {
     }
   }, [groups, options, setValue]);
 
-  const onSubmit = useCallback((values: PostOptionsForm) => {
-    api.poke<Declare[]>({
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation(async (values: PostOptionsForm) => {
+    return api.poke<Declare[]>({
       app: 'sphinx',
       mark: 'declarations',
       json: groups.filter(a => values.options.includes(a.key)).map(a => ({
@@ -44,9 +47,16 @@ export const Groups = () => {
         reach: 'friends'
       }))
     });
-
+  }, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('group-listings')
+    }
+  })
+ 
+  const onSubmit = useCallback((values: PostOptionsForm) => {
+    mutate(values);
     reset();
-  }, [reset]);
+  }, [reset, mutate]);
 
   return (
     <>
@@ -61,7 +71,16 @@ export const Groups = () => {
       </header>
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <PostOptions options={groups} emptyMessage="All groups already indexed" />
+          {groups.length === 0 && loading ? (
+            <div className='flex items-center space-x-2 text-lavender'>
+              <Spinner className='w-6 h-6' />
+              <span>Checking groups...</span>
+            </div>
+          ) : groups.length === 0 && !loading ? (
+            <h2 className='text-lavender'>All groups already indexed</h2>
+          ) : (
+            <PostOptions options={groups} />
+          )}
           <div className='flex justify-between border-t border-zinc-300 py-3 mt-6'>
             <Link to="/search" className='flex items-center rounded-lg text-base font-semibold text-rosy bg-rosy/30 border-2 border-transparent hover:border-rosy leading-none py-2 px-3 transition-colors'>
               Back to Search

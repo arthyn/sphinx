@@ -13,9 +13,10 @@
   +$  card  card:agent:gall
   +$  edition
     $%  state-0
+        state-1
     ==
-  +$  state-0
-    $:  %0
+  +$  state-1
+    $:  %1
         =lookup:s
         =trigrams:s
         =phonetics:s
@@ -23,8 +24,17 @@
         =directory:s
         published=directory:s
     ==
+  +$  state-0
+    $:  %0
+        =lookup:s
+        =trigrams:s
+        =phonetics:s
+        =trail:s
+        =directory:directory-state-zero:s
+        published=directory:directory-state-zero:s
+    ==
   --
-=|  state-0
+=|  state-1
 =*  state  -
 =<
   %+  verb  &
@@ -47,14 +57,38 @@
     [cards this]
   ::
   ++  on-save  !>(state)
-    ++  on-load
-      |=  =vase
-      ^-  (quip card _this)
-      =/  old  !<(edition vase)
-      ?-  -.old
-        %0  `this(state old)
+  ++  on-load
+    |=  =vase
+    =/  old  !<(edition vase)
+    |^
+    ?-  -.old
+      %1  `this(state old(published (purge published.old)))
+        %0
+      %_  $
+        -.old  %1
+        published.old  (purge (directory-0-to-1 published.old))
+        directory.old  (directory-0-to-1 directory.old)
       ==
+    ==
+    ++  directory-0-to-1
+      |=  =directory:directory-state-zero:s
+      ^-  directory:s
+      %-  ~(run by directory)
+      |=  =listing:directory-state-zero:s
+      ^-  listing:s
+      =/  post  post.listing(+63 [+63.post.listing ''])
+      listing(+2 post)
     ::
+    ++  purge
+      |=  =directory:s
+      ^-  directory:s
+      %-  malt
+      %+  skim 
+        ~(tap by directory) 
+      |=  [=hash:s =listing:s]
+      =(our.bowl source.listing)
+    --
+  ::
   ++  on-poke
     |=  [=mark =vase]
     ^-  (quip card _this)
@@ -251,7 +285,9 @@
     |=  l=listing:s
     =.  listing  l
     =.  cor  (index hash l)
-    =.  published  (~(put by directory) hash.listing listing)
+    =.  published  
+      ?.  =(src our):bowl  published
+      (~(put by directory) hash.listing listing)
     =.  cor  (emit (invent:gossip %directory-listing !>(listing)))  
     di-core
   --

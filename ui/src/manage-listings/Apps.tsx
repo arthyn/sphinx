@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useMutation, useQueryClient } from 'react-query';
 import { Link } from 'react-router-dom';
 import api from '../api';
 import { PostOptions } from '../components/PostOptions';
+import { Spinner } from '../components/Spinner';
 import { useApps } from '../state/apps';
 import { Declare, Listing, PostOption, PostOptionsForm } from '../types/sphinx';
 
@@ -11,7 +13,7 @@ function getAppKeys(apps: PostOption[]): string[] {
 }
 
 export const Apps = () => {
-  const apps = useApps();
+  const { apps, loading } = useApps();
   const form = useForm<PostOptionsForm>({
     defaultValues: {
       options: []
@@ -28,8 +30,9 @@ export const Apps = () => {
     }
   }, [apps, options, setValue]);
 
-  const onSubmit = useCallback((values: PostOptionsForm) => {
-    api.poke<Declare[]>({
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation(async (values: PostOptionsForm) => {
+    return api.poke<Declare[]>({
       app: 'sphinx',
       mark: 'declarations',
       json: apps.filter(a => values.options.includes(a.key)).map(a => ({
@@ -37,9 +40,16 @@ export const Apps = () => {
         reach: 'friends'
       }))
     });
+  }, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('app-listings');
+    }
+  })
 
-    reset();
-  }, [apps, reset]);
+  const onSubmit = useCallback((values: PostOptionsForm) => {
+    mutate(values)
+    reset() 
+  }, [reset, mutate]);
 
   return (
     <>
@@ -54,7 +64,16 @@ export const Apps = () => {
       </header>
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <PostOptions options={apps} emptyMessage="All apps already indexed" />
+          {apps.length === 0 && loading ? (
+            <div className='flex items-center space-x-2 text-lavender'>
+              <Spinner className='w-6 h-6' />
+              <span>Checking apps...</span>
+            </div>
+          ) : apps.length === 0 && !loading ? (
+            <h2 className='text-lavender'>All apps already indexed</h2>
+          ) : (
+            <PostOptions options={apps} />
+          )}
           <div className='flex justify-between border-t border-zinc-300 py-3 mt-6'>
             <Link to="/search" className='flex items-center rounded-lg text-base font-semibold text-rosy bg-rosy/30 border-2 border-transparent hover:border-rosy leading-none py-2 px-3 transition-colors'>
               Back to Search

@@ -10,8 +10,9 @@
         type/s/type.p
         link/s/link.p
         description/s/description.p
-        image/s/image.p
         tags/a/(turn tags.p (lead %s))
+        image/s/image.p
+        color/s/color.p
     ==
   ++  listing
     |=  l=listing:s
@@ -56,6 +57,7 @@
         description/so
         tags/(ar so)
         image/so
+        color/so
     ==
   ++  type  (su (perk [%app %group %content %other ~]))
   --

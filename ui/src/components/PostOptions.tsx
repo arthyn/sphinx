@@ -1,4 +1,5 @@
 import { CheckIcon } from '@heroicons/react/solid';
+import { uxToHex } from '@urbit/api';
 import cn from 'classnames';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -6,20 +7,11 @@ import { PostOption, PostOptionsForm } from '../types/sphinx';
 
 interface PostOptionsProps {
   options: PostOption[];
-  emptyMessage: string;
   className?: string;
 }
 
-export const PostOptions = ({ options, emptyMessage, className }: PostOptionsProps) => {
+export const PostOptions = ({ options, className }: PostOptionsProps) => {
   const { register } = useFormContext<PostOptionsForm>();
-
-  if (options.length === 0) {
-    return (
-      <div>
-        <h2 className='text-lavender'>{emptyMessage}</h2>
-      </div>
-    )
-  }
 
   return (
     <ul className={cn('space-y-3', className)}>
@@ -28,8 +20,17 @@ export const PostOptions = ({ options, emptyMessage, className }: PostOptionsPro
           <input {...register('options')} id={o.key} value={o.key} type="checkbox" className='sr-only' />
           <label htmlFor={o.key} className='checked-bg-fawn group-1 flex w-full p-2 hover:bg-fawn  cursor-pointer rounded-xl'>
             {o.post.image ? (
-              <img src={o.post.image} className="w-16 h-16 object-cover rounded-lg" />
-              ) : <div className='w-16 h-16 bg-rosy/20 rounded-lg' />}
+                <img 
+                  src={o.post.image} 
+                  className="w-16 h-16 object-cover rounded-lg" 
+                  style={{ backgroundColor: o.post.color ? `#${uxToHex(o.post.color)}` : undefined }}
+                />
+              ) : (
+                <div 
+                  className='w-16 h-16 bg-rosy/20 rounded-lg' 
+                  style={{ backgroundColor: o.post.color ? `#${uxToHex(o.post.color)}` : undefined }}
+                />
+              )}
             <div className='flex-1 ml-4'>
               <span className='block font-semibold text-lg leading-none mb-1'>{o.post.title}</span>                
               <div className='font-mono text-xs space-x-3'>

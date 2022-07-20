@@ -12,24 +12,24 @@ function getAppPost(app: string, vat: Vat, charge: Charge): Post {
     link: `web+urbitgraph://${ship}/${app}`,
     description: charge.info || charge.title,
     image: charge.image || '',
+    color: charge.color,
     tags: ['app']
   }
 }
 
 export const useApps = () => {
-  const { data: vats } = useQuery('vats', () => api.scry<Vats>(getVats));
-  const { data: charges } = useQuery('charges', () => api.scry<ChargeUpdateInitial>(scryCharges));
-  const { data } = useQuery('app-listings', () => api.scry<Search>({
+  const { data: vats, isLoading: vatsLoading } = useQuery('vats', () => api.scry<Vats>(getVats));
+  const { data: charges, isLoading: chargesLoading } = useQuery('charges', () => api.scry<ChargeUpdateInitial>(scryCharges));
+  const { data, isLoading } = useQuery('app-listings', () => api.scry<Search>({
     app: 'sphinx',
     path: '/lookup/app/0/999'
   }));
 
-  if (!vats || !charges || !data) {
-    return [];
-  }
-
-  return Object.entries(charges.initial)
+  return {
+    loading: vatsLoading || chargesLoading || isLoading,
+    apps: !vats || !charges || !data ? [] : Object.entries(charges.initial)
     .filter(([k]) => k in vats)
     .map(([k,v]) => ({ key: k, post: getAppPost(k, vats[k], v) }))
-    .filter(({ post }) => !data.listings.some(l => l.post.link === post.link || l.post.title === post.title));
+    .filter(({ post }) => !data.listings.some(l => l.post.link === post.link || l.post.title === post.title))
+  }
 }
