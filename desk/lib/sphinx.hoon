@@ -82,7 +82,10 @@
     %+  turn 
       (get-keys term) 
     |=  item=@t
-    (~(gut by lookup) item *(list entry))
+    %+  turn
+      (~(gut by lookup) item *(list entry))
+    |=  =entry
+    (derank entry 10)
   ++  get-phonetics
     |=  term=key
     ^-  (list entry)

@@ -12,7 +12,7 @@ interface ListingsProps {
 }
 
 export const Listings = ({ listings, remove, className }: ListingsProps) => {
-  const { outgoing, remove: removePal } = usePals();
+  const { installed, outgoing, remove: removePal } = usePals();
   console.log(outgoing);
   if (!listings) {
     return null;
@@ -22,6 +22,11 @@ export const Listings = ({ listings, remove, className }: ListingsProps) => {
     return (
       <div>
         <h2 className='text-xl font-semibold'>No Results</h2>
+        {installed ? (
+          <p>Try adding more <a href="/pals" className='underline'>pals</a> to see what others have shared</p>
+        ) : (
+          <p>Without pals installed you'll only see your own listings</p>
+        )}
       </div>
     )
   }
