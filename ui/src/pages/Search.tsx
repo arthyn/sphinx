@@ -84,7 +84,7 @@ export const Search = () => {
       return null;
     }
     
-    return `/${lookup}/${size}/${page || 1}`
+    return `/search/${lookup}/${size}/${page || 1}`
   }, [lookup, size]);
 
   return (

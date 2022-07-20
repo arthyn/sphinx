@@ -2,16 +2,19 @@
 ++  sift
   |=  corpus=@t
   ^-  (list @t)
+  ?:  =(corpus '')  ~
   %+  skip
     (split corpus)
   |=  word=@t
   (~(has in words) word)
 ++  norm
   |=  corpus=@t
+  ?:  =(corpus '')  ''
   (crip (cass (trimall (crip (expunge corpus)))))
 ++  split
   |=  corpus=@t
   ^-  (list @t)
+  ?:  =(corpus '')  ~
   %+  rash  (norm corpus)
   (more ace (cook crip (plus ;~(pose aln hep))))
 ++  allowed  ;~(pose aln hep ace)
@@ -19,6 +22,7 @@
 ++  expunge
   |=  corpus=@t
   ^-  (list @t)
+  ?:  =(corpus '')  ~
   %-  zing
   %+  rash  corpus
   %-  plus 
@@ -30,6 +34,7 @@
 ++  trimall
   |=  corpus=@t
   |^  ^-  tape
+  ?:  =(corpus '')  ~
   %+  rash  corpus
   %+  ifix  [(star ws) (star ws)]
   %-  star

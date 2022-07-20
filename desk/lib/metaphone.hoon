@@ -3,6 +3,7 @@
   |=  corpus=@t
   ^-  @t
   =/  norm  (cuss (trip corpus))
+  ?:  =(norm '')  ''
   ~(phone core [norm *tape 0])
 ++  core
   |_  [text=tape chars=tape index=@ud]
