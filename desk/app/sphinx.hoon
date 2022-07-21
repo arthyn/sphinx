@@ -212,6 +212,9 @@
       [%x %published ~]
     ``directory+!>(published)
   ::
+      [%x %state ~]
+    ``noun+!>(state)
+  ::
       [%x %lookup @ @ @ $@(~ [@ ~])]  
     =-  ``search+!>(-)
     ^-  search:s
@@ -231,11 +234,16 @@
           ~(val by directory)
         |=  =listing:s
         |(=(filter %all) =(filter type.post.listing))
+      =/  entries  (~(get-entries delver [lookup trigrams phonetics]) term)
+      :: ~&  %+  turn
+      ::   entries
+      :: |=  [=hash:s =rank:s]
+      :: [(~(got by directory) hash) rank]
       %+  skim
         %-  get-listings
         %-  get-hashes
         %-  sort-entries
-        (~(get-entries delver [lookup trigrams phonetics]) term)
+        entries
       |=  =listing:s
       |(=(filter %all) =(filter type.post.listing))
     =/  listings  (swag [start limit] all)
