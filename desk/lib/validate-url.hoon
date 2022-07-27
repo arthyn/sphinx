@@ -1,8 +1,8 @@
 |%
 ++  validate
   |=  url=@t
-  ^-  @t
-  %+  rash  url
+  ^-  (unit @t)
+  %+  rush  url
   %+  cold  url
   ;~  plug
     ;~  pose    

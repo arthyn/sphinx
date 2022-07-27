@@ -1,7 +1,6 @@
 /-  s=sphinx
 /+  gossip, default-agent, verb, dbug
 /+  *sphinx
-/+  *validate-url
 /+  sift
 /+  m=metaphone
 /$  grab-listing  %noun  %directory-listing
@@ -12,29 +11,12 @@
   |%
   +$  card  card:agent:gall
   +$  edition
-    $%  state-0
-        state-1
-    ==
-  +$  state-1
-    $:  %1
-        =lookup:s
-        =trigrams:s
-        =phonetics:s
-        =trail:s
-        =directory:s
-        published=directory:s
-    ==
-  +$  state-0
-    $:  %0
-        =lookup:s
-        =trigrams:s
-        =phonetics:s
-        =trail:s
-        =directory:directory-state-zero:s
-        published=directory:directory-state-zero:s
+    $%  state-0:s
+        state-1:s
+        state:s
     ==
   --
-=|  state-1
+=|  state:s
 =*  state  -
 =<
   %+  verb  &
@@ -62,13 +44,9 @@
     =/  old  !<(edition vase)
     |^
     ?-  -.old
-      %1  `this(state old(published (purge published.old)))
-        %0
-      %_  $
-        -.old  %1
-        published.old  (purge (directory-0-to-1 published.old))
-        directory.old  (directory-0-to-1 directory.old)
-      ==
+      %2  `this(state (get-state-2 directory.old))
+      %1  `this(state (get-state-2 directory.old))
+      %0  `this(state (get-state-2 (directory-0-to-1 directory.old)))
     ==
     ++  directory-0-to-1
       |=  =directory:directory-state-zero:s
@@ -79,6 +57,19 @@
       =/  post  post.listing(+63 [+63.post.listing ''])
       listing(+2 post)
     ::
+    ++  get-state-2
+      |=  =directory:s
+      :*  %2
+          (reindex directory)
+          directory
+          (purge directory)
+      ==
+    ++  reindex
+      |=  =directory:s
+      %+  roll 
+        ~(tap by directory)
+      |=  [[=hash:s l=listing:s] i=index:s]
+      (~(catalog delver i) hash l)
     ++  purge
       |=  =directory:s
       ^-  directory:s
@@ -193,10 +184,12 @@
           %directory
         =+  !<(d=directory:s vase)
         =.  directory  (~(uni by directory) d)
-        %+  roll
-          ~(tap by d)
-        |=  [[=hash:s l=listing:s] c=_cor]
-        (index:c hash l)
+        =.  index
+          %+  roll
+            ~(tap by d)
+          |=  [[=hash:s l=listing:s] i=_index]
+          (~(catalog delver i) hash l)
+        cor
       ==
     ==
   ==
@@ -234,7 +227,7 @@
           ~(val by directory)
         |=  =listing:s
         |(=(filter %all) =(filter type.post.listing))
-      =/  entries  (~(get-entries delver [lookup trigrams phonetics]) term)
+      =/  entries  (~(get-entries delver index) term)
       :: ~&  %+  turn
       ::   entries
       :: |=  [=hash:s =rank:s]
@@ -272,11 +265,11 @@
     di-core(hash h, listing (~(gut by directory) h *listing:s))
   ++  di-remove
     =.  gone    &
-    =/  keys    (~(got by trail) hash)
-    =.  trail   (~(del by trail) hash)
-    =.  lookup
+    =/  keys    (~(got by trail.index) hash)
+    =.  trail.index   (~(del by trail.index) hash)
+    =.  lookup.index
       ^-  lookup:s
-      %-  ~(uni by lookup)
+      %-  ~(uni by lookup.index)
       %-  malt
       %+  turn
         keys
@@ -284,7 +277,7 @@
       :-  key
       ^-  (list entry:s)
       %+  skip
-        (~(got by lookup) key)
+        (~(got by lookup.index) key)
       |=([h=hash:s =rank:s] =(h hash))
     =?  published  (~(has by published) hash)
       (~(del by published) hash)
@@ -292,73 +285,11 @@
   ++  di-publish
     |=  l=listing:s
     =.  listing  l
-    =.  cor  (index hash l)
+    =.  index  (~(catalog delver index) hash l)
     =.  published  
       ?.  =(src our):bowl  published
       (~(put by directory) hash.listing listing)
     =.  cor  (emit (invent:gossip %directory-listing !>(listing)))  
     di-core
   --
-++  index
-  |=  [=hash:s l=listing:s]
-  ?>  (lte (lent (trip title.post.l)) 77)
-  ?>  (lte (lent (trip description.post.l)) 256)
-  ?>  (lte (lent tags.post.l) 8)
-  ?>  (lte (lent (trip link.post.l)) 1.024)
-  ?>  (lte (lent (trip image.post.l)) 1.024)
-  =.  cor
-    ?:  =(image.post.l '')  cor
-      =/  image  (validate image.post.l)
-      cor
-  =/  link  (validate link.post.l)
-  =/  entries=lookup:s
-    %-  malt
-    %-  zing
-    :~  ~[[(crip (cass (trip title.post.l))) ~[[hash rank=0]]]]
-        %+  turn
-          (sift:sift title.post.l)
-        |=  word=@t
-        [word ~[[hash rank=1]]]
-        %+  turn
-          tags.post.l
-        |=  tag=@t
-        [(norm:sift tag) ~[[hash rank=2]]]
-        %+  turn
-          (sift:sift description.post.l)
-        |=  word=@t
-        [word ~[[hash rank=3]]]
-        ~[[type.post.l ~[[hash rank=4]]]]
-    ==
-  =/  keys  ~(tap in ~(key by entries))
-  =.  trail  (~(put by trail) hash keys)
-  =.  lookup      
-    %-  ~(uni by entries)
-    %-  ~(rut by lookup)
-    |=  [=key:s value=(list entry:s)]
-    ?.  (~(has by entries) key)  value
-    (weld value (~(got by entries) key))
-  =.  trigrams
-    %+  roll
-      %+  snoc
-        %+  turn  keys
-        |=  =key:s
-        %-  malt
-        %+  turn  (iching key)
-        |=  =trigram:s
-        [trigram (silt ~[key])]
-      trigrams
-    |=  [next=trigrams:s t=trigrams:s]
-    %-  (~(uno by t) next)
-    |=  [k=key:s v=(set key:s) w=(set key:s)]
-    (~(uni in v) w)
-  =.  phonetics
-    %-  
-    %-  ~(uno by phonetics)
-      %-  malt
-      %+  turn  keys
-      |=  =key:s
-      [(utter:m key) (silt ~[key])]
-    |=  [k=key:s v=(set key:s) w=(set key:s)]
-    (~(uni in v) w)
-  cor
 --

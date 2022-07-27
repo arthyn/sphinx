@@ -82,7 +82,21 @@
       total=@ud
   ==
 ::
++$  index
+  $:  =lookup
+      =trigrams
+      =phonetics
+      =trail
+  ==
+::
 +$  state
+  $:  %2
+      =index
+      =directory
+      published=directory
+  ==
+::
++$  state-1
   $:  %1
       =lookup
       =trigrams
@@ -92,6 +106,15 @@
       published=directory
   ==
 ::
++$  state-0
+  $:  %0
+      =lookup
+      =trigrams
+      =phonetics
+      =trail
+      =directory:directory-state-zero
+      published=directory:directory-state-zero
+  ==
 ++  directory-state-zero
   |%
   +$  post
