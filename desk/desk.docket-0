@@ -1,10 +1,10 @@
 :~  title+'sphinx'
-    info+'An app for answering all your riddles'
+    info+'A search engine powered by you and your pals for finding answers to your riddles'
     color+0xb2.5068
     image+'https://nyc3.digitaloceanspaces.com/hmillerdev/nocsyx-lassul/2022.7.16..04.35.22-sphinx-web-shifted.svg'
-    glob-http+['https://nyc3.digitaloceanspaces.com/hmillerdev/sphinx/glob-0v4.mkqik.qlhbj.1hm8n.opr21.tjb70.glob' 0v4.mkqik.qlhbj.1hm8n.opr21.tjb70]
+    glob-http+['https://nyc3.digitaloceanspaces.com/hmillerdev/sphinx/glob-0v4.vocff.vr5f0.7bh6n.r8klm.jjhia.glob' 0v4.vocff.vr5f0.7bh6n.r8klm.jjhia]
     base+'sphinx'
-    version+[0 2 0]
+    version+[0 3 0]
     website+'https://github.com'
     license+'MIT'
 ==
