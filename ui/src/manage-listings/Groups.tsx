@@ -59,7 +59,7 @@ export const Groups = () => {
   }, [reset, mutate]);
 
   return (
-    <>
+    <div className='w-full space-y-6 m-auto'>
       <header className='flex items-center'>
         <h1 className='text-2xl font-semibold'>Add Groups</h1>
         {groups.length > 0 && (
@@ -93,6 +93,6 @@ export const Groups = () => {
           </div>
         </form>
       </FormProvider>
-    </>
+    </div>
   );
 }

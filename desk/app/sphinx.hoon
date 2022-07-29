@@ -207,6 +207,31 @@
   ::
       [%x %state ~]
     ``noun+!>(state)
+      [%x %tags ~]
+    =-  ``tags+!>(-)
+    %+  roll
+      ~(tap by directory)
+    |=  [[=hash:s =listing:s] tags=(map @t @ud)]
+    %-
+    %-  ~(uno by tags)
+      %-  malt
+      %+  turn
+        tags.post.listing
+      |=(tag=@t [tag 1])
+    |=  [key=@t a=@ud b=@ud]
+    (add a b)
+  ::
+      [%x %lookup %tag @ @ @ ~]
+    =-  ``search+!>(-)
+    ^-  search:s
+    =/  start  (slav %ud i.t.t.t.path)
+    =/  limit  (slav %ud i.t.t.t.t.path)
+    =/  tag   (slav %t i.t.t.t.t.t.path)
+    %^  page  start  limit
+    %+  skim
+      ~(val by directory)
+    |=  =listing:s
+    !=(~ (find ~[tag] tags.post.listing))
   ::
       [%x %lookup @ @ @ $@(~ [@ ~])]  
     =-  ``search+!>(-)
@@ -221,31 +246,33 @@
         `@t`(slav %t i.t.t.t.t.t.path)
       ~
     ::  expects encoded @t values)
-    =/  all
-      ?~  term
-        %+  skim
-          ~(val by directory)
-        |=  =listing:s
-        |(=(filter %all) =(filter type.post.listing))
-      =/  entries  (~(get-entries delver index) term)
-      :: ~&  %+  turn
-      ::   entries
-      :: |=  [=hash:s =rank:s]
-      :: [(~(got by directory) hash) rank]
+    %^  page  start  limit
+    ?~  term
       %+  skim
-        %-  get-listings
-        %-  get-hashes
-        %-  sort-entries
-        entries
+        ~(val by directory)
       |=  =listing:s
       |(=(filter %all) =(filter type.post.listing))
-    =/  listings  (swag [start limit] all)
-    :*  listings
-        start 
-        limit 
-        (lent listings)
-        (lent all)
-    ==
+    =/  entries  (~(get-entries delver index) term)
+    :: ~&  %+  turn
+    ::   entries
+    :: |=  [=hash:s =rank:s]
+    :: [(~(got by directory) hash) rank]
+    %+  skim
+      %-  get-listings
+      %-  get-hashes
+      %-  sort-entries
+      entries
+    |=  =listing:s
+    |(=(filter %all) =(filter type.post.listing))
+  ==
+++  page
+  |=  [start=@ud limit=@ud all=(list listing:s)] 
+  =/  listings  (swag [start limit] all)
+  :*  listings
+      start 
+      limit 
+      (lent listings)
+      (lent all)
   ==
 ++  get-listings
   |=  l=(list hash)
@@ -287,7 +314,7 @@
     =.  listing  l
     =.  index  (~(catalog delver index) hash l)
     =.  published  
-      ?.  =(src our):bowl  published
+      ?.  =(source.listing our):bowl  published
       (~(put by directory) hash.listing listing)
     =.  cor  (emit (invent:gossip %directory-listing !>(listing)))  
     di-core

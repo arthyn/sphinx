@@ -46,3 +46,7 @@ export interface PostOption {
 export interface PostOptionsForm {
   options: string[];
 }
+
+export interface Tags {
+  [key: string]: number;
+}

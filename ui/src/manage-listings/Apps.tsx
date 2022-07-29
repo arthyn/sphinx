@@ -52,7 +52,7 @@ export const Apps = () => {
   }, [reset, mutate]);
 
   return (
-    <>
+    <div className='w-full space-y-6 m-auto'>
       <header className='flex items-center'>
         <h1 className='text-2xl font-semibold'>Add Apps</h1>
         {apps.length > 0 && (
@@ -86,6 +86,6 @@ export const Apps = () => {
           </div>
         </form>
       </FormProvider>
-    </>
+    </div>
   );
 }

@@ -62,7 +62,7 @@ export const Post = () => {
   }, [img]);
 
   return (
-    <>
+    <div className='w-full space-y-6 m-auto'>
       <header>
         <h1 className='text-2xl font-semibold'>Add a Listing</h1>
       </header>
@@ -119,6 +119,6 @@ export const Post = () => {
           </div>
         </form>
       </FormProvider>
-    </>
+    </div>
   )
 }

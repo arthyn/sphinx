@@ -1,9 +1,8 @@
 import cn from 'classnames';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import debounce from 'lodash.debounce';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
-import { stringToTa } from '@urbit/api';
 import { SearchInput } from '../components/SearchInput';
 import { Listings } from '../components/Listings';
 import { PostFilter, Remove, Search as SearchType } from '../types/sphinx';
@@ -12,19 +11,15 @@ import { Paginator } from '../components/Paginator';
 import { Filter } from '../components/Filter';
 import { PlusSmIcon } from '@heroicons/react/solid';
 import { usePals } from '../state/pals';
+import { TagCloud } from '../components/TagCloud';
+import { useTags } from '../state/tags';
+import { useSearch } from '../state/search';
+import { encodeLookup } from '../utils';
 
 interface RouteParams extends Record<string, string | undefined> {
   lookup?: string;
   limit?: string;
   page?: string;
-}
-
-function encodeLookup(value: string | undefined) {
-  if (!value) {
-    return '';
-  }
-
-  return stringToTa(value).replace('~.', '~~');
 }
 
 export const Search = () => {
@@ -37,16 +32,26 @@ export const Search = () => {
   const [selected, setSelected] = useState<PostFilter>('all')
   const [rawSearch, setRawSearch] = useState(lookup || '');
   const { installed: palsInstalled } = usePals();
-  const size = parseInt(limit || '10', 10);
-  const pageInt = parseInt(page || '1', 10) - 1;
-  const start = pageInt * size;
-  const { data } = useQuery<unknown, unknown, SearchType>(`lookup-${selected}-${size}-${start}-${lookup}`, () => api.scry<SearchType>({
-    app: 'sphinx',
-    path: `/lookup/${selected}/${start}/${size}/${encodeLookup(lookup)}`
-  }), {
+
+  const {
+    size,
+    start,
+    pageInt,
+    pages,
+    results,
+    linkBuild
+  } = useSearch({
+    key: (start, size) => `lookup-${selected}-${size}-${start}-${lookup}`,
+    fetcher: (start, size) => api.scry<SearchType>({
+      app: 'sphinx',
+      path: `/lookup/${selected}/${start}/${size}/${encodeLookup(lookup)}`
+    }),
     enabled: !!lookup,
-    keepPreviousData: true
+    limit,
+    page,
+    linkPrefix: `/search/${lookup}`
   });
+  const tags = useTags();
   const queryClient = useQueryClient();
   const { mutate } = useMutation((hash: string) => {
     return api.poke<Remove>({
@@ -59,12 +64,6 @@ export const Search = () => {
       queryClient.invalidateQueries(`lookup-${selected}-${size}-${start}-${lookup}`)
     }
   });
-
-  const total = data?.total || 0;
-	const pages =
-		total % size === 0
-			? total / size
-			: Math.floor(total / size) + 1;
 
   const update = useRef(debounce((value: string) => {
     if (!value) {
@@ -79,16 +78,8 @@ export const Search = () => {
     update.current(value);
   }, []);
 
-  const linkBuild = useCallback((page) => {
-    if (!page) {
-      return null;
-    }
-    
-    return `/search/${lookup}/${size}/${page || 1}`
-  }, [lookup, size]);
-
   return (
-    <>
+    <div className={cn('w-full space-y-6', !lookup && 'm-auto')}>
       <header className='flex items-center space-x-2'>
         <SearchInput className='flex-1' lookup={rawSearch} onChange={onChange} />
         <Filter selected={selected} onSelect={setSelected} className="min-w-0 sm:w-20" />
@@ -102,13 +93,19 @@ export const Search = () => {
           to see listings from others
         </div>
       )}
-      {lookup && data && <div className='flex justify-end border-t border-zinc-300'>
+      {lookup && results && <div className='flex justify-end border-t border-zinc-300'>
         <Paginator pages={pages} currentPage={pageInt} linkBuilder={linkBuild} />
       </div>}
-      {lookup && <Listings listings={data?.listings || []} remove={mutate} />}
-      {data && pages > 1 && <div className='flex justify-end border-t border-zinc-300'>
+      {lookup && <Listings listings={results.listings} remove={mutate} />}
+      {!lookup && (
+        <div className='space-y-2'>
+          <h2 className='font-semibold'>top tags</h2>
+          <TagCloud tags={tags.slice(0,12)} />
+        </div>
+      )}
+      {results && pages > 1 && <div className='flex justify-end border-t border-zinc-300'>
         <Paginator pages={pages} currentPage={pageInt} linkBuilder={linkBuild} />
       </div>}
-    </>
+    </div>
   )
 }

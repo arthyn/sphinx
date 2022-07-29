@@ -24,11 +24,11 @@ export const MyListings = () => {
   });
 
   return (
-    <>
+    <div className='w-full space-y-6 m-auto'>
       <header className='flex items-center'>
         <h1 className='text-2xl font-semibold'>My Listings</h1>
       </header>
       <Listings listings={Object.values(data || {})} remove={mutate} className="mt-6" />
-    </>
+    </div>
   )
 }

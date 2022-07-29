@@ -37,6 +37,12 @@
     %+  turn  ~(tap by d)
     |=  [=hash:s l=listing:s]
     [(scot %uv hash) (listing l)]
+  ++  tags
+    |=  tags=(map @t @ud)
+    %-  pairs
+    %+  turn  ~(tap by tags)
+    |=  [tag=@t count=@ud]
+    [tag (numb count)]
   --
 ++  dejs
   =,  dejs:format

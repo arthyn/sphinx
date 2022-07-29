@@ -9,6 +9,6 @@
   --
 ++  grab
   |%
-  ++  noun  search
+  ++  noun  search:s
   --
 --
