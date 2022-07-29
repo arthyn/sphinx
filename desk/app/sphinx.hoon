@@ -314,7 +314,7 @@
     =.  listing  l
     =.  index  (~(catalog delver index) hash l)
     =.  published  
-      ?.  =(source.listing our):bowl  published
+      ?.  =(source.listing our:bowl)  published
       (~(put by directory) hash.listing listing)
     =.  cor  (emit (invent:gossip %directory-listing !>(listing)))  
     di-core
