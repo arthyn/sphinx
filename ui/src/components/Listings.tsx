@@ -4,6 +4,7 @@ import cn from 'classnames';
 import React from 'react';
 import { usePals } from '../state/pals';
 import { Listing } from '../types/sphinx';
+import { ListingImage } from './ListingImage';
 
 interface ListingsProps {
   listings: Listing[];
@@ -36,36 +37,28 @@ export const Listings = ({ listings, remove, className }: ListingsProps) => {
       {listings && listings.map(l => (
         <li key={l.hash}>
           <article className='group-1 flex w-full'>
-            {l.post.image ? (
-              <img 
-                src={l.post.image} 
-                className="w-24 h-24 object-cover rounded-xl" 
-                style={{ backgroundColor: l.post.color ? `#${uxToHex(l.post.color)}` : undefined }}
-              />
-            ) : (
-              <div 
-                className='w-24 h-24 bg-rosy/20 rounded-xl' 
-                style={{ backgroundColor: l.post.color ? `#${uxToHex(l.post.color)}` : undefined }}
-              />
-            )}
-            <div className='flex-1 ml-4'>
-              <a className='block w-full mb-2 hover:text-rosy transition-colors' href={l.post.link}>
-                <h2 className='block font-semibold text-lg leading-none mb-1'>{l.post.title}</h2>                
-                <div className='font-mono text-xs space-x-3'>
-                  <strong>%{l.post.type}</strong>
-                  <span>{l.post.link.replace('web+urbitgraph://', '')}</span>
-                </div>
-              </a>
+            <ListingImage {...l.post} className="hidden sm:inline-block w-24 h-24 rounded-xl" />
+            <div className='flex-1 min-w-0 sm:ml-4'>
+              <div className='flex items-center'>
+                <ListingImage {...l.post} className="flex-none sm:hidden w-14 h-14 mr-2 mb-2 rounded-xl" />
+                <a className='flex-1 min-w-0 mb-2 hover:text-rosy transition-colors' href={l.post.link}>
+                  <h2 className='block font-semibold text-lg leading-none mb-1'>{l.post.title}</h2>                
+                  <div className='font-mono text-xs space-x-3 truncate'>
+                    <strong>%{l.post.type}</strong>
+                    <span>{l.post.link.replace('web+urbitgraph://', '')}</span>
+                  </div>
+                </a>
+              </div>
               <p className='mb-2 text-sm'>{l.post.description}</p>              
-              <div className='flex flex-col items-start sm:flex-row sm:items-center w-full font-mono text-xs text-zinc-500 opacity-0 group-1-hover:opacity-100 transition-opacity'>
+              <div className='flex flex-col items-start sm:flex-row sm:items-center w-full font-mono text-xs text-zinc-500 sm:opacity-0 group-1-hover:opacity-100 transition-opacity'>
                 <div className='flex items-center'>                
                   <span className='inline-flex items-center'>
                     <span className='font-semibold font-sans mr-1'>by:</span> 
                     <span>{l.source}</span>
                     {outgoing[deSig(l.source) || ''] && (
                       <button className='group-2 relative inline-flex items-center justify-center px-2 hover:text-rosy' aria-label='Remove pal' title="Remove Pal" onClick={() => removePal(deSig(l.source) || '')}>
-                        <UsersIcon className='h-4 w-4 group-2-hover:opacity-0' />
-                        <UserRemoveIcon className='absolute h-4 w-4 opacity-0 group-2-hover:opacity-100' />
+                        <UsersIcon className='h-4 w-4 opacity-0 sm:opacity-100 group-2-hover:opacity-0' />
+                        <UserRemoveIcon className='absolute h-4 w-4 sm:opacity-0 group-2-hover:opacity-100' />
                       </button>
                     )}
                   </span>
