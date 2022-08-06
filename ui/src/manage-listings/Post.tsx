@@ -1,13 +1,13 @@
 import debounce from 'lodash.debounce';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { MultiValue } from 'react-select';
 import api from '../api';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { Filter } from '../components/Filter';
 import { Option, TagField } from '../components/TagField';
-import { Declare, Post as PostForm } from '../types/sphinx';
+import { Declare, Post as PostForm, PostType } from '../types/sphinx';
 
 function errorMessages(length: number) {
   return {
@@ -17,15 +17,18 @@ function errorMessages(length: number) {
 }
 
 export const Post = () => {
-  const [tags, setTags] = useState<MultiValue<Option>>([]);
+  const [params] = useSearchParams();
+  const defaultTags = params.getAll('tags').map(t => ({ label: t, value: t})) || [];
+  const [tags, setTags] = useState<MultiValue<Option>>(defaultTags);
   const [image, setImage] = useState<string>('');
   const form = useForm<PostForm>({
     defaultValues: {
-      title: '',
-      type: 'other',
-      link: '',
-      image: '',
-      description: ''
+      title: params.get('title') || '',
+      type: params.get('type') as PostType || 'other',
+      link: params.get('link') || '',
+      image: params.get('image') || '',
+      description: params.get('description') || '',
+      color: params.get('color') || ''
     }
   });
 
@@ -36,6 +39,7 @@ export const Post = () => {
   const type = watch('type');
 
   const onSubmit = useCallback((values: Omit<PostForm, 'tags'>) => {
+    debugger;
     api.poke<Declare>({
       app: 'sphinx',
       mark: 'declare',

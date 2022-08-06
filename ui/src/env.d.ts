@@ -5,3 +5,7 @@ interface ImportMetaEnv extends Readonly<Record<string, string | boolean | undef
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+declare module 'remove-markdown-and-html' {
+  export default function removeMd(input: string): string;
+}

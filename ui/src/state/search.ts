@@ -16,7 +16,7 @@ export const useSearch = ({ key, fetcher, enabled, limit, page, linkPrefix }: Us
   const pageInt = parseInt(page || '1', 10) - 1;
   const start = pageInt * size;
   
-  const { data } = useQuery<unknown, unknown, Search>(key(start, size), () => fetcher(start, size), {
+  const { data, ...query } = useQuery<unknown, unknown, Search>(key(start, size), () => fetcher(start, size), {
     enabled,
     keepPreviousData: true
   });
@@ -39,6 +39,7 @@ export const useSearch = ({ key, fetcher, enabled, limit, page, linkPrefix }: Us
     results: data || {
       listings: []
     },
+    ...query,
     size,
     pageInt,
     start,

@@ -39,6 +39,7 @@ export const Search = () => {
     pageInt,
     pages,
     results,
+    isLoading,
     linkBuild
   } = useSearch({
     key: (start, size) => `lookup-${selected}-${size}-${start}-${lookup}`,
@@ -81,7 +82,7 @@ export const Search = () => {
   return (
     <div className={cn('w-full space-y-6', !lookup && 'm-auto')}>
       <header className='flex items-center space-x-2'>
-        <SearchInput className='flex-1' lookup={rawSearch} onChange={onChange} />
+        <SearchInput className='flex-1' lookup={rawSearch} loading={isLoading} onChange={onChange} />
         <Filter selected={selected} onSelect={setSelected} className="min-w-0 sm:w-20" />
       </header>
       {!palsInstalled && (

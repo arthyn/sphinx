@@ -1,7 +1,5 @@
-import { PlusIcon } from '@heroicons/react/solid';
 import { ChargeUpdateInitial, scryCharges } from '@urbit/api';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import api from '../api';
 import { Logo } from './Logo';
 

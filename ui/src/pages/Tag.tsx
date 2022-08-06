@@ -1,4 +1,6 @@
+import { PlusIcon, PlusSmIcon } from '@heroicons/react/solid';
 import cn from 'classnames';
+import qs from 'query-string';
 import React from 'react';
 import { useQueryClient, useMutation } from 'react-query';
 import { Link, useParams } from 'react-router-dom';
@@ -59,8 +61,15 @@ export const Tag = () => {
       <div className={cn('h-[136px] overflow-y-auto', tag && 'mb-12')}>
         <TagCloud tags={tags} />
       </div>
-      <header className='flex items-center'>
+      <header className='flex items-center justify-between'>
         <h1 className='text-2xl font-semibold leading-none'>{tag}</h1>
+        <Link 
+          to={{ pathname: '/manage-listings/post', search: qs.stringify({ tags: [tag] }) }}
+          className="inline-flex items-center px-2 pr-3 py-1 font-semibold text-linen bg-lavender hover:bg-rosy transition-colors rounded-lg"
+        >
+          <PlusSmIcon className='w-5 h-5' />
+          <span>Add</span>
+        </Link>
       </header>
       {tag && results && <div className='flex justify-end border-t border-zinc-300'>
         <Paginator pages={pages} currentPage={pageInt} linkBuilder={linkBuild} />

@@ -1,0 +1,16 @@
+.button {
+  @apply flex items-center rounded-lg text-base font-semibold text-linen bg-rosy disabled:bg-zinc-200 disabled:text-zinc-400 disabled:border-transparent border-2 border-transparent hover:border-linen/60 leading-none py-2 px-3 transition-colors;
+}
+
+input:checked + label .show-when-checked {
+  @apply opacity-100;
+}
+
+input:checked + .checked-bg-fawn,
+input:checked + label .checked-bg-fawn {
+  @apply bg-fawn;
+}
+
+.spinner {
+  @apply inline-flex items-center w-6 h-6 animate-spin;
+}
