@@ -7,9 +7,9 @@ import useMedia from '../logic/useMedia';
 import { BrowsingRoutes, PostingRoutes } from '../routes';
 import { Meta } from './Meta';
 
-const DesktopNavLink = ({ to, children }: NavLinkProps) => (
+const DesktopNavLink = ({ to, children, ...props }: NavLinkProps) => (
   <li>
-    <NavLink to={to} className={({ isActive }) => cn('hover:text-rosy transition-colors', isActive && 'underline')}>
+    <NavLink to={to} className={({ isActive }) => cn('hover:text-rosy transition-colors', isActive && 'underline')} {...props}>
       { children }
     </NavLink>
   </li>
@@ -60,7 +60,7 @@ export const Layout = () => {
         ) : (
           <nav className='w-24 mb-10'>
             <ul className='font-semibold text-sm space-y-2'>
-              {Object.entries(BrowsingRoutes).map(([k,v]) => <DesktopNavLink key={v} to={v}>{k}</DesktopNavLink>)}
+              {Object.entries(BrowsingRoutes).map(([k,v]) => <DesktopNavLink key={v} to={v} end={k === 'tags'}>{k}</DesktopNavLink>)}
             </ul>
             <hr className='block my-4 border-mauve/60'/>
             <ul className='font-semibold text-sm space-y-2'>

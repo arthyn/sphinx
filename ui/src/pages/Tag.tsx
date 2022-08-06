@@ -61,7 +61,7 @@ export const Tag = () => {
       <div className={cn('h-[136px] overflow-y-auto', tag && 'mb-12')}>
         <TagCloud tags={tags} />
       </div>
-      <header className='flex items-center justify-between'>
+      {tag && <header className='flex items-center justify-between'>
         <h1 className='text-2xl font-semibold leading-none'>{tag}</h1>
         <Link 
           to={{ pathname: '/manage-listings/post', search: qs.stringify({ tags: [tag] }) }}
@@ -70,7 +70,7 @@ export const Tag = () => {
           <PlusSmIcon className='w-5 h-5' />
           <span>Add</span>
         </Link>
-      </header>
+      </header>}
       {tag && results && <div className='flex justify-end border-t border-zinc-300'>
         <Paginator pages={pages} currentPage={pageInt} linkBuilder={linkBuild} />
       </div>}
