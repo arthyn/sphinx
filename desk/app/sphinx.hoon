@@ -179,7 +179,7 @@
         ?:  (~(has by directory) hash.listing)
         ~&  'Listing already exists.'
         cor
-        di-abet:(di-publish:(di-abed:di-core hash.listing) listing)
+        di-abet:(di-receive:(di-abed:di-core hash.listing) listing)
       ::
           %directory
         =+  !<(d=directory:s vase)
@@ -317,6 +317,11 @@
       ?.  =(source.listing our:bowl)  published
       (~(put by directory) hash.listing listing)
     =.  cor  (emit (invent:gossip %directory-listing !>(listing)))  
+    di-core
+  ++  di-receive
+    |=  l=listing:s
+    =.  listing  l
+    =.  index  (~(catalog delver index) hash l) 
     di-core
   --
 --

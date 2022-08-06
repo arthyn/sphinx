@@ -152,9 +152,6 @@
     =/  exact  (turn (get-exact title) (uprank 8))
     =/  trigrams  (turn (get-trigrams title) (uprank 4))
     =/  phonetics  (get-phonetics title)
-    ~&  [%exact exact]
-    ~&  [%trigrams trigrams]
-    ~&  [%phonetics phonetics]
     ;:  weld
       phonetics
       trigrams
