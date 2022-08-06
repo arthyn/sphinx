@@ -39,7 +39,6 @@ export const Post = () => {
   const type = watch('type');
 
   const onSubmit = useCallback((values: Omit<PostForm, 'tags'>) => {
-    debugger;
     api.poke<Declare>({
       app: 'sphinx',
       mark: 'declare',

@@ -68,10 +68,6 @@ export const TagField = ({ tags, onTags, className }: TagFieldProps) => {
     value: OnChangeValue<Option, true>,
     actionMeta: ActionMeta<Option>
   ) => {
-    console.group('Value Changed');
-    console.log(value);
-    console.log(`action: ${actionMeta.action}`);
-    console.groupEnd();
     onTags(value);
   }, []);
 
@@ -85,10 +81,6 @@ export const TagField = ({ tags, onTags, className }: TagFieldProps) => {
     switch (event.key) {
       case 'Enter':
       case 'Tab':
-        console.group('Value Added');
-        console.log(tags);
-        console.groupEnd();
-
         setInput('');
         onTags([...tags, createOption(input)])
         event.preventDefault();

@@ -14,7 +14,6 @@ interface ListingsProps {
 
 export const Listings = ({ listings, remove, className }: ListingsProps) => {
   const { installed, outgoing, remove: removePal } = usePals();
-  console.log(outgoing);
   if (!listings) {
     return null;
   }

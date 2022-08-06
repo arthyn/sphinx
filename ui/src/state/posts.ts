@@ -32,7 +32,6 @@ export const useNotebooks = () => {
   const { data, isLoading: metadataLoading } = useQuery('metadata', () => api.subscribeOnce<MetaDataUpdate>('metadata-store', '/all'));
   const { groups, loading } = usePublicGroups(data || {} as MetaDataUpdate);
 
-  console.log(keys);
   const notebooks: Record<string, Association<MetadataConfig>> = _.fromPairs(!data || loading ? [] : Object.entries(data['metadata-update'].associations)
     .filter(([,v]) => v['app-name'] === 'graph' 
       && 'graph' in v.metadata.config 
@@ -40,8 +39,6 @@ export const useNotebooks = () => {
       && keys?.has(v.resource.replace('/ship/~', ''))
       && groups.find(([, gv]) => gv.group === v.group)
     ).map(([,v]) => [v.resource.replace('/ship/', ''), v]));
-
-  console.log(data)
 
   return {
     loading: metadataLoading || loading,
@@ -85,7 +82,7 @@ export const usePosts = (ship: string, name: string, type: PostType, tags: strin
     }}
   }) : [];
 
-  const posts =  items.filter(p => !d || d.listings.length === 0 || d.listings.find(l => l.post.link === p.post.link));
+  const posts =  items.filter(p => !d || d.listings.length === 0 || !d.listings.find(l => l.post.link === p.post.link));
 
   return {
     notebook: association,
@@ -130,7 +127,6 @@ export function getSnippet(body: Content[]): { image: string, content: string } 
 
   let sum = 0;
   const firstContent = body.reduce((text, c) => {
-    debugger;
     if ('text' in c && sum < 255) {
       sum += removeMd(c.text).length;
       return text + c.text + ' ';
@@ -143,9 +139,6 @@ export function getSnippet(body: Content[]): { image: string, content: string } 
   const end = content.length > 256 ? 255 : content.length;
   const start = content.substring(0, end);
 
-  if (firstContent.match(/jiddu/i)) {
-    debugger;
-  }
   return {
     content: start === firstContent ? start : `${start}...`,
     image: getImage(firstContent) || image
