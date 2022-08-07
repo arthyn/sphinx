@@ -136,11 +136,11 @@ export function getSnippet(body: Content[]): { image: string, content: string } 
   }, '');
   const image = body.filter((c: Content): c is UrlContent => 'url' in c && IMAGE_REGEX.test(c.url)).map(c => c.url)[0] || '';
   const content = removeMd(firstContent.replace(/!\[.*\]\((.*)\)\s*/g, ''));
-  const end = content.length > 256 ? 255 : content.length;
+  const end = content.length > 256 ? 253 : content.length;
   const start = content.substring(0, end);
 
   return {
-    content: start === firstContent ? start : `${start}...`,
+    content: start === content ? start : `${start}...`,
     image: getImage(firstContent) || image
   }
 }

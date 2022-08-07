@@ -47,6 +47,30 @@
   %+  turn  
     entries
   |=(=entry hash.entry)
+++  lengths-valid
+  |=  l=listing
+  ?&  (lte (lent (trip title.post.l)) 77)
+      (lte (lent (trip description.post.l)) 256)
+      (lte (lent tags.post.l) 8)
+      (lte (lent (trip link.post.l)) 1.024)
+      (lte (lent (trip image.post.l)) 1.024)
+  ==
+++  urls-valid
+  |=  l=listing
+  =/  image
+      ?:  =(image.post.l '')  'X'
+      (validate image.post.l)
+  =/  link  (validate link.post.l)
+  &(!=(image ~) !=(link ~))
+++  listing-valid
+  |=  l=listing
+  =/  lengths  (lengths-valid l)
+  =/  urls  (urls-valid l)
+  :: ~&  title.post.l
+  :: ~&  hash.l
+  :: ~&  ['urls' ?:(urls 'valid' 'invalid')]
+  :: ~&  ['lengths' ?:(lengths 'valid' 'invalid')]
+  &(lengths urls)
 ++  delver
   |_  [=lookup =trigrams =phonetics =trail]
   ++  get
@@ -54,20 +78,7 @@
     [lookup trigrams phonetics trail]
   ++  catalog
     |=  [=hash l=listing]
-    ?.  
-      ?&  (lte (lent (trip title.post.l)) 77)
-          (lte (lent (trip description.post.l)) 256)
-          (lte (lent tags.post.l) 8)
-          (lte (lent (trip link.post.l)) 1.024)
-          (lte (lent (trip image.post.l)) 1.024)
-      ==
-      get
-    =/  image
-      ?:  =(image.post.l '')  'X'
-      (validate image.post.l)
-    =/  link  (validate link.post.l)
-    ?:  |(=(image ~) =(link ~))
-      get  
+    ?.  (listing-valid l)  get  
     =/  entries=^lookup
       %-  malt
       ^-  (list [@t (list entry)])

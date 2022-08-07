@@ -59,10 +59,11 @@
     ::
     ++  get-state-2
       |=  =directory:s
+      =/  purged  (purge-invalid directory)
       :*  %2
           (reindex directory)
-          directory
-          (purge directory)
+          purged
+          (purge-foreign purged)
       ==
     ++  reindex
       |=  =directory:s
@@ -70,7 +71,15 @@
         ~(tap by directory)
       |=  [[=hash:s l=listing:s] i=index:s]
       (~(catalog delver i) hash l)
-    ++  purge
+    ++  purge-invalid
+      |=  =directory:s
+      ^-  directory:s
+      %-  malt
+      %+  skim 
+        ~(tap by directory) 
+      |=  [=hash:s =listing:s]
+      (listing-valid listing)
+    ++  purge-foreign
       |=  =directory:s
       ^-  directory:s
       %-  malt
@@ -151,6 +160,7 @@
     ?:  (~(has by directory) hash.listing)
       ~&  'Listing already exists.'
       cor
+    ?.  (listing-valid listing)  cor
     di-abet:(di-publish:(di-abed:di-core:core hash.listing) listing)
   --
 :: 
@@ -177,8 +187,9 @@
         =+  !<(=listing:s vase)
         ?>  =(hash.listing (digest post.listing))
         ?:  (~(has by directory) hash.listing)
-        ~&  'Listing already exists.'
-        cor
+          ~&  'Listing already exists.'
+          cor
+        ?.  (listing-valid listing)  cor
         di-abet:(di-receive:(di-abed:di-core hash.listing) listing)
       ::
           %directory
@@ -315,7 +326,7 @@
     =.  index  (~(catalog delver index) hash l)
     =.  published  
       ?.  =(source.listing our:bowl)  published
-      (~(put by directory) hash.listing listing)
+      (~(put by published) hash.listing listing)
     =.  cor  (emit (invent:gossip %directory-listing !>(listing)))  
     di-core
   ++  di-receive

@@ -2,9 +2,9 @@
     info+'A search engine powered by you and your pals for finding answers to your riddles'
     color+0xb2.5068
     image+'https://nyc3.digitaloceanspaces.com/hmillerdev/nocsyx-lassul/2022.7.16..04.35.22-sphinx-web-shifted.svg'
-    glob-http+['https://nyc3.digitaloceanspaces.com/hmillerdev/sphinx/glob-0v7.58bpe.gauar.d272t.l9jhq.uqhkn.glob' 0v7.58bpe.gauar.d272t.l9jhq.uqhkn]
+    glob-http+['https://nyc3.digitaloceanspaces.com/hmillerdev/sphinx/glob-0v4.rk6nd.h0t14.4j4tv.q4bia.9m66a.glob' 0v4.rk6nd.h0t14.4j4tv.q4bia.9m66a]
     base+'sphinx'
-    version+[0 4 2]
+    version+[0 4 3]
     website+'https://github.com'
     license+'MIT'
 ==
