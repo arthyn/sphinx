@@ -9,19 +9,22 @@
   (~(has in words) word)
 ++  norm
   |=  corpus=@t
+  ^-  @t
   ?:  =(corpus '')  ''
-  (crip (cass (trimall (crip (expunge corpus)))))
+  (crip (cass (expunge (crip (trimall corpus)))))
 ++  split
   |=  corpus=@t
   ^-  (list @t)
   ?:  =(corpus '')  ~
-  %+  rash  (norm corpus)
-  (more ace (cook crip (plus ;~(pose aln hep))))
+  =/  test  (norm corpus)
+  %+  rash  test
+  (more (plus ws) (cook crip (plus ;~(pose aln hep))))
 ++  allowed  ;~(pose aln hep ace)
-++  banned  ;~(less allowed prn)
+++  banned  ;~(less allowed next)
+++  ws  (mask " \0a\0d\09")
 ++  expunge
   |=  corpus=@t
-  ^-  (list @t)
+  ^-  tape
   ?:  =(corpus '')  ~
   %-  zing
   %+  rash  corpus
@@ -33,7 +36,7 @@
   ==
 ++  trimall
   |=  corpus=@t
-  |^  ^-  tape
+  ^-  tape
   ?:  =(corpus '')  ~
   %+  rash  corpus
   %+  ifix  [(star ws) (star ws)]
@@ -42,8 +45,6 @@
     ;~(plug (plus ws) ;~(less next (easy ~)))
     ;~(pose (cold ' ' (plus ws)) next)
   ==
-  ++  ws  (mask " \0a\0d\09")
-  --
 ++  words
   %-  silt
   :~  'a'
