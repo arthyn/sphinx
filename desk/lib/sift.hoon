@@ -3,42 +3,57 @@
   |=  corpus=@t
   ^-  (list @t)
   ?:  =(corpus '')  ~
+  =/  parts  (split corpus)
+  ?~  parts  ~
   %+  skip
-    (split corpus)
+    (need parts)
   |=  word=@t
   (~(has in words) word)
 ++  norm
   |=  corpus=@t
   ^-  @t
   ?:  =(corpus '')  ''
-  (crip (cass (expunge (crip (trimall corpus)))))
+  =/  cleaned  (trimall (weave (expunge (weave (trimall `corpus)))))
+  ?~  cleaned  ''
+  (crip (cass (need cleaned)))
+++  weave
+  |=  corpus=(unit tape)
+  ^-  (unit @t)
+  ?~  corpus  ~
+  (some (crip (need corpus)))
 ++  split
   |=  corpus=@t
-  ^-  (list @t)
+  ^-  (unit (list @t))
   ?:  =(corpus '')  ~
   =/  test  (norm corpus)
-  %+  rash  test
+  %+  rush  test
   (more (plus ws) (cook crip (plus ;~(pose aln hep))))
 ++  allowed  ;~(pose aln hep ace)
 ++  banned  ;~(less allowed next)
 ++  ws  (mask " \0a\0d\09")
 ++  expunge
-  |=  corpus=@t
-  ^-  tape
-  ?:  =(corpus '')  ~
-  %-  zing
-  %+  rash  corpus
-  %-  plus 
-  ;~  pose
-    ;~(pfix (plus banned) (star allowed))
-    ;~(sfix (star allowed) (plus banned))
-    (plus allowed)
-  ==
+  |=  corpus=(unit @t)
+  ^-  (unit tape)
+  ?~  corpus  ~
+  =/  text  (need corpus)
+  ?:  =(text '')  ~
+  =/  parsed
+    %+  rush  text
+    %-  plus 
+    ;~  pose
+      ;~(pfix (plus banned) (star allowed))
+      ;~(sfix (star allowed) (plus banned))
+      (plus allowed)
+    ==
+  ?~  parsed  ~
+  `(zing (need parsed))  
 ++  trimall
-  |=  corpus=@t
-  ^-  tape
-  ?:  =(corpus '')  ~
-  %+  rash  corpus
+  |=  corpus=(unit @t)
+  ^-  (unit tape)
+  ?~  corpus  ~
+  =/  text  (need corpus)
+  ?:  =(text '')  ~
+  %+  rush  text
   %+  ifix  [(star ws) (star ws)]
   %-  star
   ;~  less
