@@ -155,6 +155,7 @@
     ?:  forward  
       ?:  (gth (add index offset) (dec (lent text)))  ''  
       (snag (add index offset) text)
+    ?:  (lth index offset)  ''
     ?:  (lth (sub index offset) 0)  ''
     (snag (sub index offset) text)
   --
