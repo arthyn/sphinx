@@ -169,7 +169,7 @@
   ^+  cor
   ?+    path  ~|(bad-watch-path/path !!)
       [%~.~ %gossip %source ~]
-    (give %fact ~ directory+!>(published))
+    (give %fact ~ directory+!>(directory))
   ==
 ++  agent
   |=  [=wire =sign:agent:gall]
