@@ -24,8 +24,9 @@ runs:
       uses: s3-actions/s3cmd@v1.4.0
       with:
         provider: digitalocean
-        access_key: ${{ inputs.S3_ACCESS_KEY }}
-        secret_key: ${{ inputs.S3_SECRET_KEY }}
+        region: nyc3
+        access_key: ${{ inputs.access_key }}
+        secret_key: ${{ inputs.secret_key }}
     - id: glob
       shell: bash
       run:
@@ -35,7 +36,7 @@ runs:
       run: |
         node -e "console.log(require('path').join(require('os').homedir(), '.s3cfg'))"
         pwd
-        ls -al
+        ls -al /home/runner
         cat /home/runner/.s3cfg
         s3cmd put zod/.urb/put/*.glob -P s3://hmillerdev/sphinx/
         sleep 5s
