@@ -35,6 +35,6 @@ echo "$SSH_SEC_KEY" >> "$sshpriv"
 chmod 600 $sshpub
 chmod 600 $sshpriv
 
-ssh kaladin@urbit.hmiller.dev 'bash -s' < "$cmdfile" -i "$sshpriv" -o "StrictHostKeyChecking=no"
+ssh -o StrictHostKeyChecking=no -o LogLevel=quiet -o UserKnownHostsFile=/dev/null -i "$sshpriv" kaladin@urbit.hmiller.dev 'bash -s' < "$cmdfile"
 
 echo "OTA performed for $desk on $ship"
