@@ -239,10 +239,13 @@
     =/  limit  (slav %ud i.t.t.t.t.path)
     =/  tag   (slav %t i.t.t.t.t.t.path)
     %^  page  start  limit
-    %+  skim
-      ~(val by directory)
-    |=  =listing:s
-    !=(~ (find ~[tag] tags.post.listing))
+    %+  sort
+      %+  skim
+        ~(val by directory)
+      |=  =listing:s
+      !=(~ (find ~[tag] tags.post.listing))
+    |=  [a=listing:s b=listing:s]
+    (lth time.b time.a)
   ::
       [%x %lookup @ @ @ $@(~ [@ ~])]  
     =-  ``search+!>(-)
