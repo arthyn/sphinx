@@ -23,13 +23,9 @@ rsync -avL $1 zod/work/glob
 hood "commit %work"
 dojo "-garden!make-glob %work /glob"
 
-s3cmd put zod/.urb/put/*.glob -P s3://hmillerdev/sphinx/
-gsutil cp zod/.urb/put/*.glob gs://bootstrap.urbit.org
 hash=$(ls -1 -c zod/.urb/put | head -1 | sed "s/glob-\([a-z0-9\.]*\).glob/\1/")
 sed -i "s/glob\-[a-z0-9\.]*glob' *[a-z0-9\.]*\]/glob-$hash.glob' $hash]/g" $2
 
 echo "hash=$(echo $hash)" >> $GITHUB_OUTPUT
 
 hood "exit"
-sleep 5s
-rm -rf zod
