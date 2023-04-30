@@ -33,6 +33,8 @@ runs:
     - name: Upload Glob and Cleanup
       shell: bash
       run: |
+        node -e "console.log(require('path').join(homedir, '.s3cfg'))"
+        pwd
         ls -al
         s3cmd put zod/.urb/put/*.glob -P s3://hmillerdev/sphinx/
         sleep 5s
