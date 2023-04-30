@@ -1,8 +1,8 @@
 import { ChevronLeftIcon } from '@heroicons/react/solid';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useMutation, useQueryClient } from 'react-query';
-import { Link, useParams } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 import { MultiValue } from 'react-select';
 import api from '../api';
 import { Filter } from '../components/Filter';
@@ -12,6 +12,7 @@ import { TagField, Option } from '../components/TagField';
 import useMedia from '../logic/useMedia';
 import {  usePosts } from '../state/posts';
 import { Declare, PostOptionsForm, PostType } from '../types/sphinx';
+import { POST_LISTINGS_KEY } from '../keys';
 
 interface PostsProps {
   ship: string;
@@ -62,7 +63,7 @@ export const Posts = ({ ship, name }: PostsProps) => {
     });
   }, {
     onSuccess: () => {
-      queryClient.invalidateQueries('post-listings')
+      queryClient.invalidateQueries(POST_LISTINGS_KEY)
     }
   })
  
@@ -77,10 +78,10 @@ export const Posts = ({ ship, name }: PostsProps) => {
         {limited && (
           <Link to="/manage-listings/posts" className='flex items-center'>
             <ChevronLeftIcon className='h-6 w-6 text-mauve/60' />
-            <h1 className='text-2xl font-semibold'>{notebook?.metadata?.title}</h1>
+            <h1 className='text-2xl font-semibold'>{notebook?.meta.title}</h1>
           </Link>
         )}
-        {!limited && <h1 className='text-2xl font-semibold'>{notebook?.metadata?.title}</h1>}
+        {!limited && <h1 className='text-2xl font-semibold'>{notebook?.meta.title}</h1>}
         {posts.length > 0 && (
           <button className='p-1.5 ml-auto text-sm underline font-semibold' onClick={toggleAll}>
             {options.length !== posts.length && 'select all'}

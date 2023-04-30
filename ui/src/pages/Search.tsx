@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import React, { useCallback, useRef, useState } from 'react';
 import debounce from 'lodash.debounce';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SearchInput } from '../components/SearchInput';
 import { Listings } from '../components/Listings';
@@ -15,6 +15,7 @@ import { TagCloud } from '../components/TagCloud';
 import { useTags } from '../state/tags';
 import { useSearch } from '../state/search';
 import { encodeLookup } from '../utils';
+import { lookupKey } from '../keys';
 
 interface RouteParams extends Record<string, string | undefined> {
   lookup?: string;
@@ -42,7 +43,7 @@ export const Search = () => {
     isLoading,
     linkBuild
   } = useSearch({
-    key: (start, size) => `lookup-${selected}-${size}-${start}-${lookup}`,
+    key: lookupKey(selected, lookup),
     fetcher: (start, size) => api.scry<SearchType>({
       app: 'sphinx',
       path: `/lookup/${selected}/${start}/${size}/${encodeLookup(lookup)}`
@@ -62,7 +63,7 @@ export const Search = () => {
     })
   }, {
     onSuccess: () => {
-      queryClient.invalidateQueries(`lookup-${selected}-${size}-${start}-${lookup}`)
+      queryClient.invalidateQueries(lookupKey(selected, lookup)(start, size))
     }
   });
 
@@ -82,7 +83,7 @@ export const Search = () => {
   return (
     <div className={cn('w-full space-y-6', !lookup && 'm-auto')}>
       <header className='flex items-center space-x-2'>
-        <SearchInput className='flex-1' lookup={rawSearch} loading={isLoading} onChange={onChange} />
+        <SearchInput className='flex-1' lookup={rawSearch} loading={!!lookup && isLoading} onChange={onChange} />
         <Filter selected={selected} onSelect={setSelected} className="min-w-0 sm:w-20" />
       </header>
       {!palsInstalled && (

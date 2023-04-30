@@ -1,26 +1,34 @@
-import { Associations, GroupUpdateInitial, MetadataUpdateInitial } from "@urbit/api";
-import { useQuery } from "react-query"
+import { useQuery } from "@tanstack/react-query"
 import api from "../api"
-import { PostOption, PostType, Search } from "../types/sphinx";
+import { PostType, Search } from "../types/sphinx";
+import { ChannelPreview, Groups } from "../types";
+import { useMemo } from "react";
+import { GROUPS_KEY, GROUP_LISTINGS_KEY } from "../keys";
+import { getColor, getImage, isColor } from "../utils";
 
-export type MetaDataUpdate = { 'metadata-update': MetadataUpdateInitial };
+export const usePublicGroups = () => {
+  const { data, ...query } = useQuery(GROUPS_KEY, 
+    () => api.scry<Groups>({
+      app: 'groups',
+      path: '/groups/light'
+    }),
+    { initialData: {} }
+  );
 
-export const usePublicGroups = (metadata?: { 'metadata-update': MetadataUpdateInitial }) => {
-  const { data, isLoading } = useQuery('metadata', () => api.subscribeOnce<MetaDataUpdate>('metadata-store', '/all'), {
-    enabled: !metadata
-  });
-  const { data: groupData, isLoading: groupDataLoading } = useQuery('groups', () => api.subscribeOnce<{ groupUpdate: GroupUpdateInitial }>('group-store', '/groups'));
+  const groups = useMemo(() => {
+    if (!data) return [];
+    return Object.entries(data).filter(([,v]) => !v.secret);
+  }, [data]);
 
   return {
-    loading: isLoading || groupDataLoading,
-    groups: !data || !groupData ? [] : Object.entries(data['metadata-update'].associations)
-    .filter(([k,v]) => v['app-name'] === 'groups' && 'open' in (groupData.groupUpdate.initial[v.resource]?.policy || {}))
+    ...query,
+    groups
   }
 }
 
 export const useGroups = () => {
-  const { groups, loading } = usePublicGroups();
-  const { data: d, isLoading } = useQuery('group-listings', () => api.scry<Search>({
+  const { groups, isLoading: loading } = usePublicGroups();
+  const { data: d, isLoading } = useQuery(GROUP_LISTINGS_KEY, () => api.scry<Search>({
     app: 'sphinx',
     path: '/lookup/group/0/999'
   }));
@@ -29,13 +37,39 @@ export const useGroups = () => {
     loading: loading || isLoading,
     groups: groups.map(([k,v]) => ({ key: k, post: {
       type: 'group' as PostType,
-      title: v.metadata.title,
-      link: v.group.replace('/ship/', 'web+urbitgraph://group/'),
-      image: v.metadata.picture,
-      color: v.metadata.color,
-      description: v.metadata.description,
+      title: v.meta.title,
+      link: `/1/group/${k}`, //`/apps/groups/groups/${k}`,
+      image: getImage(v.meta.image) || getImage(v.meta.cover) || '',
+      color: getColor(v.meta.image) || getColor(v.meta.cover) || '',
+      description: v.meta.description,
       tags: ['group']
     }}))
     .filter(({ post }) => !d || d.listings.length === 0 || !d.listings.some(l => l.post.link === post.link || l.post.title === post.title))
   }
+}
+
+export function useChannelPreview(nest: string): ChannelPreview | undefined {
+  const { groups } = usePublicGroups();
+  const group = groups.find(([,g]) => {
+    return !!g.channels[nest];
+  });
+
+  const { data } = useQuery(['channel-preview', nest],
+    () => api.subscribeOnce<ChannelPreview>('groups', `/chan/${nest}`, 5000),
+    {
+      enabled: groups && !!nest && !group,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  return group ? {
+    nest,
+    meta: group[1].channels[nest].meta,
+    group: {
+      flag: group[0],
+      meta: group[1].meta,
+      secret: group[1].secret
+    }
+  } : data;
 }

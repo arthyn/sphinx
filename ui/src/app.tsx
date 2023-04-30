@@ -1,5 +1,5 @@
 import React from 'react';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { CenterColumn } from './components/CenterColumn';
 import { Layout } from './components/Layout';
@@ -9,7 +9,6 @@ import { Groups } from './manage-listings/Groups';
 import { MyListings } from './manage-listings/MyListings';
 import { Notebooks } from './manage-listings/Notebooks';
 import { Post } from './manage-listings/Post';
-import { Posts } from './manage-listings/Posts';
 import { Search } from './pages/Search';
 import { Tag } from './pages/Tag';
 

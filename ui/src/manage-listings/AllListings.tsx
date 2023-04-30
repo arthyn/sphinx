@@ -1,11 +1,12 @@
 import React from 'react';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import api from '../api';
 import { Listings } from '../components/Listings';
 import { Paginator } from '../components/Paginator';
 import { useSearch } from '../state/search';
 import { Remove, Search } from '../types/sphinx';
+import { PUBLISHED_KEY } from '../keys';
 
 interface RouteParams extends Record<string, string | undefined> {
   limit?: string;
@@ -24,7 +25,7 @@ export const AllListings = () => {
     pageInt,
     linkBuild
   } = useSearch({
-    key: (start, size) => `all-${start}-${size}`,
+    key: (start, size) => ['all', start, size],
     fetcher: (start, size) => api.scry<Search>({
       app: 'sphinx',
       path: `/lookup/all/${start}/${size}`
@@ -42,7 +43,7 @@ export const AllListings = () => {
     })
   }, {
     onSuccess: () => {
-      queryClient.invalidateQueries('published');
+      queryClient.invalidateQueries(PUBLISHED_KEY);
     }
   });
 

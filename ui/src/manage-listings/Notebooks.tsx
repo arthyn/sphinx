@@ -1,18 +1,18 @@
-import { uxToHex } from '@urbit/api';
 import cn from 'classnames';
 import React from 'react';
-import { Link, NavLink, useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { Spinner } from '../components/Spinner';
-import useMedia, { useIsMobile } from '../logic/useMedia';
+import useMedia from '../logic/useMedia';
 import { useNotebooks } from '../state/posts';
 import { Posts } from './Posts';
+import { getColor, getImage } from '../utils';
 
 export const Notebooks = () => {
   const { ship, name } = useParams<{ ship: string, name: string }>();
   const limited = useMedia('(max-width: 899px)');
   const { groups, notebooks, loading } = useNotebooks();
   const sortedNotebooks = Object.entries(notebooks)
-    .sort(([,a], [,b]) => a.metadata.title.localeCompare(b.metadata.title));
+    .sort(([,a], [,b]) => a.meta.title.localeCompare(b.meta.title));
 
   return (
     <div className="flex-none flex flex-col max-w-5xl w-full p-4 sm:py-12 sm:px-8 space-y-6 sm:pl-32 xl:pl-8">
@@ -28,27 +28,29 @@ export const Notebooks = () => {
                 <span>Loading notebooks...</span>
               </div>}
               {sortedNotebooks.map(([id, n], index) => {
-                const [,group] = groups.find(([,v]) => v.group === n.group) || [];
+                const [,group] = groups.find(([k]) => k === n.perms.group) || [];
+                const image = group && (getImage(group.meta.image) || getImage(group.meta.cover) || '');
+                const color = group && (getColor(group.meta.image) || getColor(group.meta.cover) || '');
 
                 return (
                   <li key={id}>
                     <NavLink to={`/manage-listings/posts/${id}`} className={({ isActive }) => cn('flex items-center p-2 space-x-2 leading-tight rounded-md hover:bg-fawn', isActive && 'bg-fawn')}>
-                      {group && group.metadata.picture ? (
+                      {group && image ? (
                         <img 
-                          src={group.metadata.picture} 
+                          src={image} 
                           className="flex-none w-10 h-10 object-cover rounded-md"
                           loading={index > 15 ? 'lazy' : 'eager'} 
-                          style={{ backgroundColor: group.metadata.color ? `#${uxToHex(group.metadata.color)}` : undefined }}
+                          style={{ backgroundColor: color }}
                         />
                       ) : group ? (
                         <div 
                           className='flex-none w-10 h-10 bg-rosy/20 rounded-md' 
-                          style={{ backgroundColor: group.metadata.color ? `#${uxToHex(group.metadata.color)}` : undefined }}
+                          style={{ backgroundColor: color }}
                         />
                       ) : null}
                       <div className='flex flex-col min-w-0'>
-                        <strong className='w-full truncate'>{n.metadata.title}</strong>
-                        {group && <span className='text-sm'>{group.metadata.title}</span>}
+                        <strong className='w-full truncate'>{n.meta.title}</strong>
+                        {group && <span className='text-sm'>{group.meta.title}</span>}
                       </div>
                     </NavLink>
                   </li>

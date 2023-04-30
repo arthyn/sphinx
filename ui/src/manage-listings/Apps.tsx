@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import api from '../api';
 import { PostOptions } from '../components/PostOptions';
 import { Spinner } from '../components/Spinner';
 import { useApps } from '../state/apps';
 import { Declare, Listing, PostOption, PostOptionsForm } from '../types/sphinx';
+import { APP_LISTINGS_KEY } from '../keys';
 
 function getAppKeys(apps: PostOption[]): string[] {
   return apps.map(({ key }) => key);
@@ -42,7 +43,7 @@ export const Apps = () => {
     });
   }, {
     onSuccess: () => {
-      queryClient.invalidateQueries('app-listings');
+      queryClient.invalidateQueries(APP_LISTINGS_KEY);
     }
   })
 

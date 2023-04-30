@@ -1,9 +1,9 @@
 import { CheckIcon } from '@heroicons/react/solid';
-import { uxToHex } from '@urbit/api';
 import cn from 'classnames';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { PostOption, PostOptionsForm } from '../types/sphinx';
+import { normalizeColor } from '../utils';
 
 interface PostOptionsProps {
   options: PostOption[];
@@ -28,12 +28,12 @@ export const PostOptions = ({ options, showTags = false, className }: PostOption
                   src={o.post.image} 
                   className="show-when-checked w-16 h-16 col-span-1 object-cover rounded-lg opacity-60"
                   loading={index > 15 ? 'lazy' : 'eager'} 
-                  style={{ backgroundColor: o.post.color ? `#${uxToHex(o.post.color)}` : undefined }}
+                  style={{ backgroundColor: o.post.color ? normalizeColor(o.post.color) : undefined }}
                 />
               ) : (
                 <div 
                   className='w-16 h-16 col-span-1 bg-rosy/20 rounded-lg' 
-                  style={{ backgroundColor: o.post.color ? `#${uxToHex(o.post.color)}` : undefined }}
+                  style={{ backgroundColor: o.post.color ? normalizeColor(o.post.color) : undefined }}
                 />
               )}
             <div className='ml-4 min-w-0 sm:space-y-2'>

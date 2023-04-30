@@ -1,9 +1,9 @@
 import { useCallback } from "react";
-import { useQuery } from "react-query";
+import { QueryKey, useQuery } from "@tanstack/react-query";
 import { Search } from "../types/sphinx";
 
 interface UseSearchParams {
-  key: (start: number, size: number) => string;
+  key: (start: number, size: number) => QueryKey;
   fetcher: (start: number, size: number) => Promise<Search>;
   enabled: boolean;
   linkPrefix: string;
@@ -16,7 +16,7 @@ export const useSearch = ({ key, fetcher, enabled, limit, page, linkPrefix }: Us
   const pageInt = parseInt(page || '1', 10) - 1;
   const start = pageInt * size;
   
-  const { data, ...query } = useQuery<unknown, unknown, Search>(key(start, size), () => fetcher(start, size), {
+  const { data, ...query } = useQuery<Search>(key(start, size), () => fetcher(start, size), {
     enabled,
     keepPreviousData: true
   });

@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import api from '../api';
 import { PostOptions } from '../components/PostOptions';
 import { Spinner } from '../components/Spinner';
 import { useGroups } from '../state/groups';
-import { Declare, PostOption, PostOptionsForm } from '../types/sphinx';
+import { Declare, PostOptionsForm } from '../types/sphinx';
+import { GROUP_LISTINGS_KEY } from '../keys';
 
 export const Groups = () => {
   const { groups, loading } = useGroups();
@@ -49,7 +50,7 @@ export const Groups = () => {
     });
   }, {
     onSuccess: () => {
-      queryClient.invalidateQueries('group-listings')
+      queryClient.invalidateQueries(GROUP_LISTINGS_KEY)
     }
   })
  

@@ -1,10 +1,11 @@
 import { useMemo } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import api from "../api";
 import { Tags } from "../types/sphinx";
+import { TAGS_KEY } from "../keys";
 
 export const useTags = () => {
-  const { data } = useQuery('tags', () => api.scry<Tags>({
+  const { data } = useQuery(TAGS_KEY, () => api.scry<Tags>({
     app: 'sphinx',
     path: '/tags'
   }));

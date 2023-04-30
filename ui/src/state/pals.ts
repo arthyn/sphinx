@@ -1,13 +1,14 @@
 import { ChargeUpdateInitial, scryCharges } from '@urbit/api';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../api';
+import { CHARGES_KEY, PALS_KEY } from '../keys';
 
 interface Pal {
   lists: string[];
   ack: true | null;
 }
 
-interface Pals {
+export interface Pals {
   [k: string]: Pal;
 }
 
@@ -26,10 +27,10 @@ interface RemovePal {
 
 export const usePals = () => {
   const queryClient = useQueryClient();
-  const { data: charges } = useQuery('charges', () => {
+  const { data: charges } = useQuery(CHARGES_KEY, () => {
     return api.scry<ChargeUpdateInitial>(scryCharges);
   })
-  const { data } = useQuery('pals', () => {
+  const { data } = useQuery(PALS_KEY, () => {
     return api.scry<PalsData>({
       app: 'pals',
       path: '/json'
@@ -48,7 +49,7 @@ export const usePals = () => {
     })
   }, {
     onSuccess: () => {
-      queryClient.invalidateQueries('pals');
+      queryClient.invalidateQueries(PALS_KEY);
     }
   })
 

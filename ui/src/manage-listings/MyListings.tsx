@@ -1,13 +1,13 @@
-import { size } from 'lodash';
 import React from 'react';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../api';
 import { Listings } from '../components/Listings';
 import { Directory, Remove } from '../types/sphinx';
+import { PUBLISHED_KEY } from '../keys';
 
 export const MyListings = () => {
   const queryClient = useQueryClient();
-  const { data } = useQuery('published', () => api.scry<Directory>({
+  const { data } = useQuery(PUBLISHED_KEY, () => api.scry<Directory>({
     app: 'sphinx',
     path: '/published'
   }));
@@ -19,7 +19,7 @@ export const MyListings = () => {
     })
   }, {
     onSuccess: () => {
-      queryClient.invalidateQueries('published');
+      queryClient.invalidateQueries(PUBLISHED_KEY);
     }
   });
 

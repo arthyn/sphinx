@@ -2,7 +2,7 @@ import { PlusIcon, PlusSmIcon } from '@heroicons/react/solid';
 import cn from 'classnames';
 import qs from 'query-string';
 import React from 'react';
-import { useQueryClient, useMutation } from 'react-query';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { Link, useParams } from 'react-router-dom';
 import api from '../api';
 import { Listings } from '../components/Listings';
@@ -12,14 +12,13 @@ import { useSearch } from '../state/search';
 import { useTags } from '../state/tags';
 import { Remove, Search } from '../types/sphinx';
 import { encodeLookup } from '../utils';
+import { tagKey } from '../keys';
 
 interface RouteParams extends Record<string, string | undefined> {
   tag?: string;
   limit?: string;
   page?: string;
 }
-
-const tagKey = (tag?: string) => (start: number, size: number) => `tag-${tag || ''}-${size}-${start}`
 
 export const Tag = () => {
   const tags = useTags();
