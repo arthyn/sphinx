@@ -1,8 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
 import { stringToTa, uxToHex } from "@urbit/api";
 import { parseToRgba } from "color2k";
-import api from "./api";
-import { ChannelPreview } from "./types";
 
 export function encodeLookup(value: string | undefined) {
   if (!value) {
@@ -75,7 +72,7 @@ export function refToURL(cite: string): string | { nest: string, where: string }
   if (type === 'group') {
     const ship = parts[2];
     const name = parts[3];
-    return `/apps/groups/groups/${ship}/${name}`;
+    return `/apps/groups/find/${ship}/${name}`;
   }
 
   const chanType = parts[2];
