@@ -33,7 +33,7 @@ runs:
     - name: Upload Glob and Cleanup
       shell: bash
       run: |
-        ls
+        ls -al
         s3cmd put zod/.urb/put/*.glob -P s3://hmillerdev/sphinx/
         sleep 5s
         rm -rf zod
