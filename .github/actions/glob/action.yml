@@ -31,6 +31,7 @@ runs:
       run:
         ./.github/helpers/glob.sh "${{ inputs.folder }}" ${{ inputs.docket }}
     - name: Upload Glob and Cleanup
+      shell: bash
       run: |
         s3cmd put zod/.urb/put/*.glob -P s3://hmillerdev/sphinx/
         sleep 5s
