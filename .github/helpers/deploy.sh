@@ -18,14 +18,17 @@ source_repo=$(mktemp --dry-run /tmp/repo.build.XXXXXXXXX)
 git clone --depth 1 --branch '$ref' git@github.com:'$repo'.git $source_repo
 urbit_repo=$(mktemp --dry-run /tmp/repo.urbit.XXXXXXXXX)
 git clone --depth 1 git@github.com:urbit/urbit.git $urbit_repo -b '$URBIT_REPO_TAG' --single-branch
-cd $source_repo
-cd /home/urb || return
+landscape_repo=$(mktemp --dry-run /tmp/repo.landscape.XXXXXXXXX)
+git clone --depth 1 --branch master git@github.com:tloncorp/landscape.git $landscape_repo
+cd /home/kaladin
 curl -s --data '\''{"source":{"dojo":"+hood/mount %'$desk'"},"sink":{"app":"hood"}}'\'' http://localhost:12321
 rsync -avL --delete $urbit_repo/pkg/base-dev/ '$folder'
+rsync -avL $landscape_repo/desk-dev/ '$folder'
 rsync -avL $source_repo/desk/ '$folder'
 curl -s --data '\''{"source":{"dojo":"+hood/commit %'$desk'"},"sink":{"app":"hood"}}'\'' http://localhost:12321
 rm -rf $source_repo
 rm -rf $urbit_repo
+rm -rf $landscape_repo
 '
 echo "$cmds" >> "$cmdfile"
 sshpriv=$(mktemp "${TMPDIR:-/tmp/}ssh.XXXXXXXXX")
