@@ -46,6 +46,8 @@ jobs:
         with:
           folder: 'ui/dist/*'
           docket: 'desk/desk.docket-0'
+          access_key: ${{ secrets.S3_ACCESS_KEY }}
+          secret_key: ${{ secrets.S3_SECRET_KEY }}
       - name: Commit and Push Glob
         run: |
           git config --global user.name github-actions
