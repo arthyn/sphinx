@@ -9,7 +9,7 @@
 ++  mutual   |=  [list=@ta =ship]  (s _| /mutuals/[list]/(scot %p ship))
 ::
 ++  base     ~+  /(scot %p our)/pals/(scot %da now)
-++  running  ~+  .^(? %gu base)
+++  running  ~+  .^(? %gu (weld base /$))
 ::
 ++  s
   |*  [=mold =path]  ~+
